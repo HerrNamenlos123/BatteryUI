@@ -6,7 +6,8 @@
 #define __FUNCTION__ __func__
 #endif
 
-#define UI_EXCEPTION(msg, ...) MakeException(__FUNCTION__, msg, __VA_ARGS__)
+#define UI_VA_ARGS(...) , ##__VA_ARGS__
+#define UI_EXCEPTION(msg, ...) MakeException(__FUNCTION__, msg, UI_VA_ARGS(__VA_ARGS__))
 
 namespace BatteryUI {
 

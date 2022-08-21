@@ -4,6 +4,8 @@
 #include "BatteryUI/Font.h"
 #include "BatteryUI/Window.h"
 
+#include <memory>
+
 namespace BatteryUI {
 
     template<typename T, typename... TArgs>

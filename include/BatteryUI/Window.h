@@ -37,7 +37,7 @@ namespace BatteryUI {
 			this->flags = other.flags;
 		}
 		
-		Window& operator=(Window const& other) {	// Unchanged id but copied data
+		void operator=(Window const& other) {	// Unchanged id but copied data
 			this->name = other.name;
 			this->flags = other.flags;
 		}
