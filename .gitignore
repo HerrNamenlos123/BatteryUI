@@ -33,6 +33,7 @@
 
 # Visual Studio folders
 .vs
+.vscode
 *.sln
 
 # Miscellaneous

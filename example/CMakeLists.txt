@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(uiExample LANGUAGES CXX)
+project(example LANGUAGES CXX)
 
 
 ###################
@@ -30,8 +30,12 @@ endfunction()
 ################
 
 get_github_dependency(imgui "modules/imgui/imgui.cpp" "https://github.com/ocornut/imgui.git")
+get_github_dependency(glfw "modules/glfw/CMakeLists.txt" "https://github.com/glfw/glfw.git")
 
 include(cmake/imgui.cmake)
+add_subdirectory(modules/glfw)
+
+add_subdirectory(.. bin)    # Include the actual BatteryUI library
 
 
 #####################
@@ -41,22 +45,25 @@ include(cmake/imgui.cmake)
 file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "include/*")
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
 
-add_executable(uiExample ${SRC_FILES} ${HEADER_FILES})
+add_executable(example ${SRC_FILES} ${HEADER_FILES})
 
-target_compile_features(uiExample PRIVATE cxx_std_17)
-set_target_properties(uiExample PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_features(example PRIVATE cxx_std_20)
+set_target_properties(example PROPERTIES CXX_EXTENSIONS OFF)
 
-target_include_directories(uiExample PUBLIC
+target_include_directories(example PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 if(MSVC)
-    set_property(TARGET uiExample PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    #set_property(TARGET example PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /MP")
 else()
-    target_compile_options(uiExample PRIVATE -Wno-psabi)
+    target_compile_options(example PRIVATE -Wno-psabi)
 endif()
 
+set_target_properties(example PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../bin"
+)
 
 
 ############################
@@ -64,7 +71,7 @@ endif()
 ############################
 
 if (WIN32)
-    target_compile_definitions(uiExample PRIVATE
+    target_compile_definitions(example PRIVATE
        WIN32_LEAN_AND_MEAN      # Prevents Windows.h from adding unnecessary includes
        NOMINMAX                 # Prevents Windows.h from defining min/max as macros 
        _CRT_SECURE_NO_WARNINGS  # Prevents MSVC warnings about deprecated functions
@@ -77,7 +84,10 @@ endif()
 # Linking #
 ###########
 
-target_link_libraries(uiExample imgui::imgui)
+target_link_libraries(example BatteryUI::BatteryUI)
+target_link_libraries(example imgui::imgui)
+target_link_libraries(example glfw)
+target_link_libraries(example opengl32)
 
 
 
