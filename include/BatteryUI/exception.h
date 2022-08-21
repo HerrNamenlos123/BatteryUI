@@ -3,7 +3,7 @@
 #include <exception>
 
 #ifndef _MSC_VER
-#define __FUNCTION__ __func__
+#define __FUNCTION__ __PRETTY_FUNCTION__
 #endif
 
 #define UI_EXCEPTION(msg, ...) MakeException(__FUNCTION__, msg, ##__VA_ARGS__)
