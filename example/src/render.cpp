@@ -11,7 +11,7 @@ struct _UI {     // by BatteryUI::Shutdown() to ensure destruction at the right 
     
     _UI(int size) {
         //font = BatteryUI::LoadFontFromFile("C:\\Windows\\Fonts\\arial.ttf", size);
-        font = ImGui::GetIO().Fonts->AddFontDefault();
+        //font = ImGui::GetIO().Fonts->AddFontDefault();
     }
 };
 std::unique_ptr<_UI> ui; // Global instance

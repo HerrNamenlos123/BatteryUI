@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <exception>
+#include <BatteryUI/BatteryUI.h>
 
 // These three functions build up the example in render.cpp
 void setupUI();
@@ -50,7 +51,7 @@ int main() {
     try {
         setupUI();
     }
-    catch (const std::exception& e) {       // You should always catch exceptions
+    catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
         fprintf(stderr, "std::exception was thrown: %s\n", e.what());
         glfwSetWindowShouldClose(window, true);
     }
@@ -65,7 +66,7 @@ int main() {
         try {
             renderUI();     // This function is defined in render.cpp, it does all the work
         }
-        catch (const std::exception& e) {       // You should always catch exceptions
+        catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
             fprintf(stderr, "std::exception was thrown: %s\n", e.what());
             glfwSetWindowShouldClose(window, true);
         }
@@ -85,7 +86,7 @@ int main() {
     try {
         shutdownUI();
     }
-    catch (const std::exception& e) {       // You should always catch exceptions
+    catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
         fprintf(stderr, "std::exception was thrown: %s\n", e.what());
         glfwSetWindowShouldClose(window, true);
     }

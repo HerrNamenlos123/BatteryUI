@@ -26,9 +26,23 @@ namespace BatteryUI {
         }
     }
 
+    class Exception : public std::exception {
+    public:
+        Exception(const std::string& msg) {
+            this->msg = msg;
+        }
+
+		const char* what() const noexcept override {
+			return msg.c_str();
+		}
+
+    private:
+        std::string msg;
+    };
+
     template<typename... TArgs>
-    std::exception MakeException(const std::string& function, const std::string& fmt, TArgs... args) {
-        return std::runtime_error(__format_string_("[%s]: " + fmt, function.c_str(), args...));
+    BatteryUI::Exception MakeException(const std::string& function, const std::string& fmt, TArgs... args) {
+        return BatteryUI::Exception(__format_string_("[%s]: " + fmt, function.c_str(), args...));
     }
 
 }
