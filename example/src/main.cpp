@@ -51,7 +51,7 @@ int main() {
         setupUI();
     }
     catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
-        fprintf(stderr, "std::exception was thrown: %s\n", e.what());
+        fprintf(stderr, "BatteryUI::Exception was thrown: %s\n", e.what());
         glfwSetWindowShouldClose(window, true);
     }
 
@@ -66,7 +66,7 @@ int main() {
             renderUI();     // This function is defined in render.cpp, it does all the work
         }
         catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
-            fprintf(stderr, "std::exception was thrown: %s\n", e.what());
+            fprintf(stderr, "BatteryUI::Exception was thrown: %s\n", e.what());
             glfwSetWindowShouldClose(window, true);
         }
 
@@ -86,7 +86,7 @@ int main() {
         shutdownUI();
     }
     catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
-        fprintf(stderr, "std::exception was thrown: %s\n", e.what());
+        fprintf(stderr, "BatteryUI::Exception was thrown: %s\n", e.what());
         glfwSetWindowShouldClose(window, true);
     }
 
