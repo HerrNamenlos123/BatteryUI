@@ -3,6 +3,8 @@
 #include "BatteryUI/common.h"
 #include "BatteryUI/Font.h"
 #include "BatteryUI/Window.h"
+#include "BatteryUI/Style.h"
+#include "BatteryUI/FileWatcher.h"
 
 #include <memory>
 

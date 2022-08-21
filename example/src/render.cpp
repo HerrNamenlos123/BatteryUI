@@ -1,24 +1,22 @@
 
-#include "imgui.h"
-#include "BatteryUI/BatteryUI.h"    // This must be included after imgui.h!
+#include "HomeUI.h"
 
-                 // This is a container, which is created by BatteryUI::Setup() and deleted
-struct _UI {     // by BatteryUI::Shutdown() to ensure destruction at the right time.
-
-    BatteryUI::Font font;
-
-    BatteryUI::Window window;
-    
-    _UI(int size) {
-        //font = BatteryUI::LoadFontFromFile("C:\\Windows\\Fonts\\arial.ttf", size);
-    }
-};
-std::unique_ptr<_UI> ui; // Global instance
-//extern _UI ui;  // You can put this in a header if you need it in multiple files
+std::unique_ptr<UI> ui; // Global instance
 
 void setupUI() {
-    int fontSize = 15;
-    ui = BatteryUI::Setup<_UI>(fontSize);   // Any parameters here appear in the _UI constructor
+    ui = BatteryUI::Setup<UI>();   // Any parameters here are passed to the UI constructor
+}
+
+void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitches when live reloading fonts
+    
+    if (ImGui::IsKeyPressed(ImGuiKey_UpArrow, false)) {
+        ui->fontSize++;
+    }
+    if (ImGui::IsKeyPressed(ImGuiKey_DownArrow, false) && ui->fontSize > 4) {
+        ui->fontSize--;
+    }
+    ui->updateFontSize();   // This must be called before ImGui::NewFrame()
+
 }
 
 void renderUI() {

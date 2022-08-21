@@ -11,6 +11,7 @@
 
 // These three functions build up the example in render.cpp
 void setupUI();
+void updateUI();
 void renderUI();
 void shutdownUI();
 
@@ -19,7 +20,7 @@ static void glfw_error_callback(int error, const char* description) {
 }
 
 int main() {
-
+	
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -46,7 +47,7 @@ int main() {
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);     // You must set up all of this yourself. BatteryUI needs an 
     ImGui_ImplOpenGL3_Init(glsl_version);           // already functioning ImGui project
-
+    
     try {
         setupUI();
     }
@@ -57,6 +58,14 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+
+        try {
+            updateUI();
+        }
+        catch (const BatteryUI::Exception& e) {       // You should always catch exceptions
+            fprintf(stderr, "BatteryUI::Exception was thrown: %s\n", e.what());
+            glfwSetWindowShouldClose(window, true);
+        }
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
