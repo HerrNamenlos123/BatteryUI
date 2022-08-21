@@ -6,7 +6,6 @@
 #include "backends/imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <exception>
 #include <BatteryUI/BatteryUI.h>
 
@@ -97,8 +96,6 @@ int main() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
-
-    system("Pause");
 
     return 0;
 }
