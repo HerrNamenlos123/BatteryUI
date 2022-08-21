@@ -2,6 +2,7 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Font.h"
+#include "BatteryUI/Window.h"
 
 namespace BatteryUI {
 

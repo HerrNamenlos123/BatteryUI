@@ -5,10 +5,13 @@
                  // This is a container, which is created by BatteryUI::Setup() and deleted
 struct _UI {     // by BatteryUI::Shutdown() to ensure destruction at the right time.
 
-    BatteryUI::Font font;// = BatteryUI::MakeFont();
+    BatteryUI::Font font;
+
+    BatteryUI::Window window;
     
     _UI(int size) {
-        font = BatteryUI::LoadFontFromFile("test", size);
+        //font = BatteryUI::LoadFontFromFile("C:\\Windows\\Fonts\\arial.ttf", size);
+        font = ImGui::GetIO().Fonts->AddFontDefault();
     }
 };
 std::unique_ptr<_UI> ui; // Global instance
@@ -22,7 +25,13 @@ void setupUI() {
 void renderUI() {
     BatteryUI::NewFrame();
 
+    ui->window.draw([&] {
+        ImGui::Text("Hello");
+    });
+	
+    ImGui::PushFont(ui->font);
     ImGui::ShowDemoWindow();
+    ImGui::PopFont();
 
     BatteryUI::EndFrame();
 }

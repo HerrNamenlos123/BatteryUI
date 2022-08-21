@@ -8,22 +8,25 @@ namespace BatteryUI {
 
     class Font {
     public:
-        Font() {
-            this->font = ImGui::GetIO().Fonts->AddFontDefault();
-        }
+        Font() {}
 
         Font(ImFont* font) {
             this->font = font;
         }
 
-        Font(Font&& other) {
+        Font(Font&& other) noexcept {
             font = other.font;
             other.font = nullptr;
         }
 
-        void operator=(Font&& other) {
+        void operator=(Font&& other) noexcept {
             font = other.font;
             other.font = nullptr;
+        }
+
+        operator ImFont*() {
+            if (!font) throw UI_EXCEPTION("Cannot access unloaded font!");
+            return font;
         }
 
         Font(const Font&) = delete;
@@ -40,7 +43,7 @@ namespace BatteryUI {
             chars.push_back(rangeBegin);
             chars.push_back(rangeEnd);
         }
-        throw UI_EXCEPTION("Failed to load font!");
+        //throw UI_EXCEPTION("Failed to load font!");
         chars.push_back(0);
         ImFont* font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filePath.c_str(), size, nullptr, &chars[0]);
         if (font == nullptr) throw UI_EXCEPTION("Failed to load font!");

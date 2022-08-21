@@ -47,7 +47,6 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
 
 add_executable(example ${SRC_FILES} ${HEADER_FILES})
 
-target_compile_features(example PRIVATE cxx_std_20)
 set_target_properties(example PROPERTIES CXX_EXTENSIONS OFF)
 
 target_include_directories(example PUBLIC
