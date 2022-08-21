@@ -86,7 +86,12 @@ endif()
 target_link_libraries(example BatteryUI::BatteryUI)
 target_link_libraries(example imgui::imgui)
 target_link_libraries(example glfw)
-target_link_libraries(example opengl32)
+
+if(MSVC)
+    target_link_libraries(example opengl32)
+else()
+    target_link_libraries(example GL)
+endif()
 
 
 
