@@ -6,7 +6,7 @@ namespace BatteryUI {
 	
 	class FileWatcher {
 	public:
-		FileWatcher(const std::string& filename, float updateInterval = 2.f) {
+		FileWatcher(const std::string& filename, float updateInterval = 0.1f) {
 			this->filename = filename;
 			this->updateInterval = updateInterval;
 			path = std::filesystem::path(filename);

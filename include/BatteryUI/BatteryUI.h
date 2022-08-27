@@ -2,9 +2,8 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Font.h"
-#include "BatteryUI/Window.h"
-#include "BatteryUI/Style.h"
-#include "BatteryUI/FileWatcher.h"
+#include "BatteryUI/RootUI.h"
+#include "BatteryUI/InternalImpl.h"
 
 #include <memory>
 
@@ -16,11 +15,11 @@ namespace BatteryUI {
     }
 
     inline void NewFrame() {
-
+        RootUI::defaults.style.push();
     }
 
     inline void EndFrame() {
-        
+        RootUI::defaults.style.pop();
     }
 
     template<typename T>

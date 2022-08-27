@@ -4,20 +4,26 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "BatteryUI/BatteryUI.h"    // This must be included after imgui.h!
 
-                // This is a container, which is created by BatteryUI::Setup() and deleted
-struct UI {     // by BatteryUI::Shutdown() to ensure destruction at the right time.
+#define STYLESHEET "../resources/stylesheet.json"
+#define ROBOTO_FONT "../resources/roboto.medium.ttf"
+
+struct UI : BatteryUI::RootUI {
 
     int fontSize = 18;
     BatteryUI::Font font;
 
     BatteryUI::Window window;
+    BatteryUI::Button save;
+    BatteryUI::Button load;
 
-    UI() {
+    UI() : BatteryUI::RootUI(STYLESHEET) {
         loadFonts();
+        save.name = "Save";
+        load.name = "Load";
     }
 
     void loadFonts() {
-        font = BatteryUI::LoadFontFromFile("../resources/roboto.medium.ttf", fontSize);
+        font = BatteryUI::LoadFontFromFile(ROBOTO_FONT, fontSize);
     }
 
     void updateFontSize() {
@@ -35,6 +41,12 @@ struct UI {     // by BatteryUI::Shutdown() to ensure destruction at the right t
         }
     }
 
-};
+    EXPORT_STYLE() {
+        EXPORT_ITEM(defaults);  // This is needed by RootUI
+		
+        EXPORT_ITEM(window);
+        EXPORT_ITEM(load);
+        EXPORT_ITEM(save);
+    }
 
-extern std::unique_ptr<UI> ui;
+};

@@ -34,7 +34,7 @@ int main() {
         return 1;
 
     glfwMakeContextCurrent(window);
-    //glfwSwapInterval(1);
+    //glfwSwapInterval(1);          // Not enabling V-Sync: We have our own FPS limit
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
