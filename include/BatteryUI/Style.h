@@ -11,6 +11,7 @@ namespace BatteryUI {
 		struct Color {
 			float r = 0, g = 0, b = 0, a = 0;
 			Color() {}
+			Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
 			Color(ImVec4 c) : r(c.x), g(c.y), b(c.z), a(c.w) {}
 			operator ImVec4() {
 				return { r, g, b, a };
@@ -84,6 +85,13 @@ namespace BatteryUI {
 				if (index != -1)
 					ImGui::PopStyleColor();
 			}
+		}
+
+		void addColor(const std::string& identifier, float r, float g, float b, float a) {
+			ColorScheme::ColorEntry entry;
+			entry.identifier = identifier;
+			entry.color = { r, g, b, a };
+			colors.push_back(entry);
 		}
 
 		std::vector<ColorEntry> colors;

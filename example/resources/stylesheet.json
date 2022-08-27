@@ -1,8 +1,7 @@
 {
     "root": {
         "defaults": {
-            "style": {
-            },
+            "style": {},
             "colorScheme": {
                 "colors": [
                     {
@@ -485,11 +484,10 @@
                 ]
             },
             "button": {
-                "style": {
-                },
+                "style": {},
                 "size": {
-                    "x": 160,
-                    "y": 40
+                    "x": 160.0,
+                    "y": 40.0
                 },
                 "roundingType": 1,
                 "roundingAmount": 5.0,
@@ -497,34 +495,46 @@
                     {
                         "identifier": "ImGuiCol_Button",
                         "color": {
-                            "r": 0.000000011920929,
-                            "g": 0.600000011920929,
-                            "b": 0.900000011920929,
-                            "a": 0.8499999940395355
+                            "r": 0.0,
+                            "g": 0.6000000238418579,
+                            "b": 0.8999999761581421,
+                            "a": 0.8399999737739563
+                        }
+                    },
+                    {
+                        "identifier": "ImGuiCol_ButtonHovered",
+                        "color": {
+                            "r": 0.10000000149011612,
+                            "g": 0.699999988079071,
+                            "b": 1.0,
+                            "a": 0.8399999737739563
+                        }
+                    },
+                    {
+                        "identifier": "ImGuiCol_ButtonActive",
+                        "color": {
+                            "r": 0.0,
+                            "g": 0.5,
+                            "b": 0.800000011920929,
+                            "a": 0.8399999737739563
                         }
                     }
                 ]
             }
         },
         "window": {
-            "style": {
-            }
+            "style": {}
         },
         "load": {
-            "style": {
-            },
-            "size": {
-            },
+            "style": {},
+            "size": {},
             "roundingType": 0,
             "roundingAmount": 0.0,
-            "colors": [
-            ]
+            "colors": []
         },
         "save": {
-            "style": {
-            },
-            "size": {
-            },
+            "style": {},
+            "size": {},
             "roundingType": 0,
             "roundingAmount": 0.0,
             "colors": []

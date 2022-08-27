@@ -69,7 +69,6 @@ namespace BatteryUI {
 		vec2_opt(int x, int y) : v(x, y) { _has_value = true; }
 		vec2_opt(float x, float y) : v(x, y) { _has_value = true; }
 		vec2_opt(ImVec2 v) : v(v.x, v.y) { _has_value = true; }
-		void operator=(const vec2& v) { this->v = v; _has_value = true; }
 		void operator=(const vec2_opt& v) { this->v = v.v; _has_value = v._has_value; }
 
 		bool has_value() const {

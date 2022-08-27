@@ -12,13 +12,33 @@ namespace BatteryUI {
 		
 		Style style;
 		ColorScheme colorScheme;
-		ButtonDefaultStyle button;
+		
+		ButtonDefaultStyle button;	// Widgets are not pushed here, they are pushed per-item
+
+		void push() {
+			style.push();
+			colorScheme.push();
+		}
+
+		void pop() {
+			style.pop();
+			colorScheme.pop();
+		}
 
 		template <class Archive>
 		void serialize(Archive& ar) {
 			EXPORT_ITEM(style);
 			EXPORT_ITEM(colorScheme);
 			EXPORT_ITEM(button);
+		}
+
+		DefaultStyles() {
+			style = Style();
+			
+			colorScheme = ColorScheme();
+
+			Button::Presets::load();
+			button = ButtonDefaultStyle(Button::Presets::Modern);
 		}
 	};
 	
@@ -28,6 +48,7 @@ namespace BatteryUI {
 
 		RootUI(const std::string& styleSheet) : watcher(styleSheet) {
 			this->styleSheet = styleSheet;
+			defaults = DefaultStyles();
 			window.name = "Style Manager";
 		}
 
@@ -39,26 +60,30 @@ namespace BatteryUI {
 		}
 		
 		bool loadStyleSheet() {
-			std::ifstream file(styleSheet);
-			if (!file.is_open()) {
-				printf("[%s]: Failed to load style sheet: No such file or directory. Creating default stylesheet\n", __FUNCTION__);
-				saveStyleSheet();		// Default create
-				return false;
-			}
+			do {
+				std::ifstream file(styleSheet);
+				if (!file.is_open()) {
+					printf("[%s]: Failed to load style sheet: No such file or directory. Creating default stylesheet\n", __FUNCTION__);
+					break;
+				}
 
-			try {
-				cereal::JSONInputArchive ar(file);
-				archive(ar);
-			}
-			catch (const std::exception& e) {
+				try {
+					cereal::JSONInputArchive ar(file);
+					archive(ar);
+				}
+				catch (const std::exception& e) {
+					file.close();
+					printf("[%s]: Error while loading style sheet: %s\n", __FUNCTION__, e.what());
+					return false;
+				}
+
 				file.close();
-				printf("[%s]: Error while loading style sheet: %s\n", __FUNCTION__, e.what());
-				return false;
-			}
+				Internal::ApplyColorScheme();
+				return true;
+			} while (false);
 
-			file.close();
-			Internal::ApplyColorScheme();
-			return true;
+			saveStyleSheet();		// Default create -> The std::ifstream object must be destructed before calling this
+			return loadStyleSheet();
 		}
 		
 		void saveStyleSheet() {

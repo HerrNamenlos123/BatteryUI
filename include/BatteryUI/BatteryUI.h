@@ -11,15 +11,17 @@ namespace BatteryUI {
 
     template<typename T, typename... TArgs>
     inline std::unique_ptr<T> Setup(TArgs... args) {
-        return std::make_unique<T>(args...);
+        auto ui = std::make_unique<T>(args...);
+        ui->loadStyleSheet();
+        return std::move(ui);
     }
 
     inline void NewFrame() {
-        RootUI::defaults.style.push();
+        RootUI::defaults.push();
     }
 
     inline void EndFrame() {
-        RootUI::defaults.style.pop();
+        RootUI::defaults.pop();
     }
 
     template<typename T>
