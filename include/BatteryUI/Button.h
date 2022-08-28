@@ -105,11 +105,11 @@ namespace BatteryUI {
 		}
 
 		struct Presets {
-			inline static struct ButtonPreset Standard;		// Standard ImGui-look
+			inline static struct ButtonPreset None;			// No special override
 			inline static struct ButtonPreset Modern; 		// Modern light-blue
 			
 			inline static void load() {
-				Standard = Button::ButtonPreset();
+				None = Button::ButtonPreset();
 
 				Modern = Button::ButtonPreset();
 				Modern.colors.addColor("ImGuiCol_Button", 0, 0.6, 0.9, 0.84);

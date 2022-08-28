@@ -13,6 +13,7 @@ namespace BatteryUI {
     inline std::unique_ptr<T> Setup(TArgs... args) {
         auto ui = std::make_unique<T>(args...);
         ui->loadStyleSheet();
+        ui->updateHotreload();
         return std::move(ui);
     }
 
@@ -26,6 +27,7 @@ namespace BatteryUI {
 
     template<typename T>
     inline void Shutdown(T& ui) {
+        ui->saveStyleSheet();
         ui.reset();
     }
 
