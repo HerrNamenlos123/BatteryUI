@@ -68,7 +68,7 @@ void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitch
     if (ImGui::IsKeyPressed(ImGuiKey_UpArrow, false)) {
         ui->fontSize++;
     }
-    if (ImGui::IsKeyPressed(ImGuiKey_DownArrow, false) && ui->fontSize > 4) {
+    if (ImGui::IsKeyPressed(ImGuiKey_DownArrow, false) && ui->fontSize > 4) {   // Must stay above 0
         ui->fontSize--;
     }
     ui->updateFontSize();

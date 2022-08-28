@@ -51,6 +51,8 @@ namespace BatteryUI {
 				s = Internal::GetButtonDefaultSize().value();
 			if (size.has_value())
 				s = size.value();
+
+			if (sameline) ImGui::SameLine();
 			
 			clicked = ImGui::Button(getIdentifier().c_str(), s);
 			actSize = ImGui::GetItemRectSize();
@@ -89,6 +91,7 @@ namespace BatteryUI {
 		template <class Archive>
 		void load(Archive& ar) {
 			EXPORT_ITEM(style);
+			EXPORT_ITEM(sameline);
 			EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
 			EXPORT_ITEM(roundingAmount);
@@ -98,6 +101,7 @@ namespace BatteryUI {
 		template <class Archive>
 		void save(Archive& ar) const {
 			EXPORT_ITEM(style);
+			EXPORT_ITEM(sameline);
 			EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
 			EXPORT_ITEM(roundingAmount);

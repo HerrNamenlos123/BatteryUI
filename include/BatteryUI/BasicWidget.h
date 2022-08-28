@@ -7,6 +7,7 @@ namespace BatteryUI {
 	class BasicWidget {
 	public:
 		Style style;
+		bool sameline = false;
 		std::string name;
 
 		BasicWidget() {

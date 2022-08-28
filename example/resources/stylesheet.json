@@ -527,14 +527,22 @@
         },
         "load": {
             "style": {},
-            "size": {},
+            "sameline": true,
+            "size": {
+                "x": 320.0,
+                "y": 40.0
+            },
             "roundingType": 0,
             "roundingAmount": 0.0,
             "colors": []
         },
         "save": {
             "style": {},
-            "size": {},
+            "sameline": false,
+            "size": {
+                "x": 320.0,
+                "y": 40.0
+            },
             "roundingType": 0,
             "roundingAmount": 0.0,
             "colors": []
