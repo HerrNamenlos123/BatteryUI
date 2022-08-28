@@ -92,21 +92,6 @@ void renderUI() {
     ImGui::PopFont();
 
     BatteryUI::EndFrame();
-
-    // And wait the remaining frame time to limit cpu usage
-    double framerate = 60.f;
-    int64_t frametime = 1000000.0f / framerate;
-    int64_t elapsed = 0;
-    static auto prevTime = std::chrono::high_resolution_clock::now();
-	
-    do {
-        std::this_thread::yield();
-        auto now = std::chrono::high_resolution_clock::now();
-        elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - prevTime).count();
-		if (elapsed < frametime - 4000)  // Sleep in 1ms increments until we're 4ms away from the next frame, then spin-lock to not miss it
-            std::this_thread::sleep_for(std::chrono::microseconds(1000));       // The sleep method itself is way too unprecise
-	} while (elapsed < frametime);
-    prevTime = std::chrono::high_resolution_clock::now();
 }
 
 void shutdownUI() {

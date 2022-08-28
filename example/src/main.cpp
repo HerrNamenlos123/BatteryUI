@@ -57,7 +57,18 @@ int main() {
     }
 
     while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+        //glfwPollEvents();     // <- This would let it run as fast as possible
+        glfwWaitEvents();       // <- This waits until an event arrives, this is an easy way to only let your
+		                        // application render when something changes. However, this is a problem
+                                // with dynamic widgets like blinking cursors as they do not create events.
+								// In this case you could use glfwPostEmptyEvent(); to force an event and
+		                        // cause a screen update only when necessary. You could use another thread which
+		                        // periodically causes a screen update, just fast enough so the cursor looks good.
+                                // (Not in this example)
+		                        //
+		                        // Dynamic widgets like spinners or loading bars have their own background threads
+								// and callbacks which then each cause a screen update when necessary.
+		                        
 
         try {
             updateUI();
