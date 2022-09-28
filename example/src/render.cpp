@@ -5,11 +5,12 @@
 std::unique_ptr<UI> ui; // Global instance
 
 void setupUI() {
+
     ui = BatteryUI::Setup<UI>([&] {     // The first parameter is a lambda function callback which when called
         glfwPostEmptyEvent();           // tell you to re-render the screen (for example when a loading bar is
     });                                 // visible. Can be ignored if framerate is always high. Any additional
                                         // parameters are forwarded to your UI class constructor
-    
+
 }
 
 void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitches when live reloading fonts
@@ -36,10 +37,10 @@ void renderUI() {
 		
 
         ui->drop1.items.clear();
-        ui->drop1.items.push_back("fdsakl");
-        ui->drop1.items.push_back("f3fewfa");
-        ui->drop1.items.push_back("3094zt083");
-        ui->drop1.items.push_back("foiewmfi0w");
+        ui->drop1.items.emplace_back("fdsakl");
+        ui->drop1.items.emplace_back("f3fewfa");
+        ui->drop1.items.emplace_back("3094zt083");
+        ui->drop1.items.emplace_back("foiewmfi0w");
         
         ui->drop1();
         ui->drop2();

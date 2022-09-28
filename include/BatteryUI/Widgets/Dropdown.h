@@ -15,7 +15,7 @@ namespace BatteryUI {
 			ROUNDED,				// Round corners
 			HALF_ROUND,				// Radius is half the button width
 		};
-		enum class RoundingType roundingType = RoundingType::NONE;
+		enum RoundingType roundingType = RoundingType::NONE;
 		float roundingAmount = 0.f;
 		std::optional<float> width;
 		ColorScheme colors;
@@ -30,13 +30,14 @@ namespace BatteryUI {
 
 		struct DropdownPreset {
 			Style style;
-			enum class Dropdown::RoundingType roundingType = Dropdown::RoundingType::NONE;
+			enum Dropdown::RoundingType roundingType = Dropdown::RoundingType::NONE;
 			float roundingAmount = 0.f;
 			std::optional<float> width;
 			ColorScheme colors;
+            DropdownPreset() {};
 		};
 
-		void loadPreset(struct DropdownPreset preset) {
+		void loadPreset(const struct DropdownPreset& preset) {
 			style = preset.style;
 			roundingType = preset.roundingType;
 			roundingAmount = preset.roundingAmount;
@@ -93,7 +94,7 @@ namespace BatteryUI {
 
 	struct DropdownDefaultStyle {
 		Style style;
-		enum class Dropdown::RoundingType roundingType = Dropdown::RoundingType::NONE;
+		enum Dropdown::RoundingType roundingType = Dropdown::RoundingType::NONE;
 		float roundingAmount = 0.f;
 		std::optional<float> width;
 		ColorScheme colors;
@@ -158,7 +159,7 @@ namespace BatteryUI {
 			selectedItem = 0;
 		if (selectedItem >= items.size())
 			selectedItem = items.size() - 1;
-		if (items.size() == 0)
+		if (items.empty())
 			selectedItem = -1;
 
 		if (half_round)
@@ -177,11 +178,11 @@ namespace BatteryUI {
 
 		if (sameline) ImGui::SameLine();
 
-		std::string& label = (items.size() == 0) ? "" : items[selectedItem];
-		ImGui::PushID(id);
+		std::string label = (items.empty()) ? "" : items[selectedItem];
+		ImGui::PushID((int)id);
 		ImGui::SetNextItemWidth(w);
 		if (ImGui::BeginCombo(getIdentifier().c_str(), label.c_str())) {
-			if (items.size() != 0) {
+			if (!items.empty()) {
 				for (size_t i = 0; i < items.size(); i++) {
 					ImGui::PushID(i);
 					bool is_selected = (i == selectedItem);

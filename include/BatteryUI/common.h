@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
+#include <atomic>
 #include <map>
 
 #include "BatteryUI/magic_enum.h"

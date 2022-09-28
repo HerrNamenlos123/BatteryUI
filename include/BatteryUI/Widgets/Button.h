@@ -16,8 +16,8 @@ namespace BatteryUI {
 			ROUNDED,				// Round corners
 			HALF_ROUND,				// Radius is half the button width
 		};
-		enum class RoundingType roundingType = RoundingType::NONE;
-		ImGuiProperty roundingAmount;
+		enum RoundingType roundingType = RoundingType::NONE;
+		//ImGuiProperty roundingAmount;
 		Property<ImVec2> size;
 		ColorScheme colors;
 
@@ -31,16 +31,17 @@ namespace BatteryUI {
 
 		struct ButtonPreset {
 			Style style;
-			enum class Button::RoundingType roundingType = Button::RoundingType::NONE;
+			enum Button::RoundingType roundingType = Button::RoundingType::NONE;
 			float roundingAmount = 0.f;
 			Property<ImVec2> size;
 			ColorScheme colors;
+            ButtonPreset() {}
 		};
 
 		void loadPreset(struct ButtonPreset preset) {
 			style = preset.style;
 			roundingType = preset.roundingType;
-			roundingAmount = preset.roundingAmount;
+			//roundingAmount = preset.roundingAmount;
 			size = preset.size;
 			colors = preset.colors;
 		}
@@ -55,7 +56,7 @@ namespace BatteryUI {
 			EXPORT_ITEM(sameline);
 			//EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
-			EXPORT_ITEM(roundingAmount);
+			//EXPORT_ITEM(roundingAmount);
 			EXPORT_ITEM_NESTED(colors, colors);
 		}
 
@@ -65,7 +66,7 @@ namespace BatteryUI {
 			EXPORT_ITEM(sameline);
 			//EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
-			EXPORT_ITEM(roundingAmount);
+			//EXPORT_ITEM(roundingAmount);
 			EXPORT_ITEM_NESTED(colors, colors);
 		}
 
@@ -94,12 +95,12 @@ namespace BatteryUI {
 
 	struct ButtonDefaultStyle {
 		Style style;
-		enum class Button::RoundingType roundingType = Button::RoundingType::NONE;
+		enum Button::RoundingType roundingType = Button::RoundingType::NONE;
 		float roundingAmount = 0.f;
 		Property<ImVec2> size;
 		ColorScheme colors;
 		
-		ButtonDefaultStyle() {}
+		ButtonDefaultStyle() = default;
 		ButtonDefaultStyle(struct Button::ButtonPreset preset) {
 			loadPreset(preset);
 		}
@@ -140,8 +141,8 @@ namespace BatteryUI {
 		}
 	};
 
-	inline void Button::draw() {
-		bool half_round = false;
+    inline void Button::draw() {
+		/*bool half_round = false;
 		Internal::GetButtonDefaults()->push(half_round);
 		style.push();
 		colors.push();
@@ -175,7 +176,7 @@ namespace BatteryUI {
 
 		colors.pop();
 		style.pop();
-		Internal::GetButtonDefaults()->pop();
+		Internal::GetButtonDefaults()->pop();*/
 	}
 	
 }

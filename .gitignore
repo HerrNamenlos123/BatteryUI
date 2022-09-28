@@ -36,6 +36,9 @@
 .vscode
 *.sln
 
+# CLion folders
+cmake-build-*
+
 # Miscellaneous
 bin/
 build/

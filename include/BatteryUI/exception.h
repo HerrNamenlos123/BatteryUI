@@ -2,16 +2,18 @@
 
 #include <exception>
 
-#ifndef _MSC_VER
-#define __FUNCTION__ __PRETTY_FUNCTION__
+#ifdef _MSC_VER     // MSVC
+#define GET_FUNCTION_NAME() __FUNCTION__    // Evaluates to 'myNamespace::myFunction'
+#else
+#define GET_FUNCTION_NAME() __func__        // Evaluates to 'myFunction'
 #endif
 
-#define UI_EXCEPTION(msg, ...) MakeException(__FUNCTION__, msg, ##__VA_ARGS__)
+#define UI_EXCEPTION(msg, ...) MakeException(GET_FUNCTION_NAME(), msg, ##__VA_ARGS__)
 
 namespace BatteryUI {
 
 	template<typename... TArgs>
-    std::string __format_string_(const std::string& fmt, TArgs... args) {
+    std::string _format_string_(const std::string& fmt, TArgs... args) {
         int size = 100;
         std::string str;
         while (true) {
@@ -28,11 +30,11 @@ namespace BatteryUI {
 
     class Exception : public std::exception {
     public:
-        Exception(const std::string& msg) {
+        explicit Exception(const std::string& msg) {
             this->msg = msg;
         }
 
-		const char* what() const noexcept override {
+		[[nodiscard]] const char* what() const noexcept override {
 			return msg.c_str();
 		}
 
@@ -42,7 +44,7 @@ namespace BatteryUI {
 
     template<typename... TArgs>
     BatteryUI::Exception MakeException(const std::string& function, const std::string& fmt, TArgs... args) {
-        return BatteryUI::Exception(__format_string_("[%s]: " + fmt, function.c_str(), args...));
+        return BatteryUI::Exception(_format_string_("[%s]: " + fmt, function.c_str(), args...));
     }
 
 }

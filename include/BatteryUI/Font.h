@@ -44,19 +44,22 @@ namespace BatteryUI {
 		ImGui::GetIO().Fonts->Build();
 	}
 
-    using _GlyphRanges = std::vector<std::pair<ImWchar, ImWchar>>;
-    inline Font LoadFontFromFile(const std::string& filePath, int size, const _GlyphRanges& glyphRanges = _GlyphRanges()) {
+    using GlyphRanges_ = std::vector<std::pair<ImWchar, ImWchar>>;
+    inline Font LoadFontFromFile(const std::string& filePath, float size, const GlyphRanges_& glyphRanges = GlyphRanges_()) {
         std::vector<ImWchar> chars;
         for (auto [rangeBegin, rangeEnd] : glyphRanges) {
             chars.push_back(rangeBegin);
             chars.push_back(rangeEnd);
         }
         chars.push_back(0);
+
+        if (!std::filesystem::exists(filePath))
+            throw UI_EXCEPTION("Cannot load font '%s': No such file or directory", filePath.c_str());
 		
 		ImWchar* glyphs = chars.size() > 1 ? chars.data() : nullptr;
         ImFont* font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filePath.c_str(), size, nullptr, glyphs);
         if (font == nullptr) throw UI_EXCEPTION("Failed to load font!");
-        return Font(font);
+        return {font};
     }
 
 }

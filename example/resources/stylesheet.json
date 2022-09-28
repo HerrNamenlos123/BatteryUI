@@ -496,10 +496,6 @@
             },
             "button": {
                 "style": {},
-                "size": {
-                    "x": 160.0,
-                    "y": 40.0
-                },
                 "roundingType": 1,
                 "roundingAmount": 5.0,
                 "colors": [
@@ -598,17 +594,13 @@
         "load": {
             "style": {},
             "sameline": false,
-            "size": {},
             "roundingType": 0,
-            "roundingAmount": 0.0,
             "colors": []
         },
         "save": {
             "style": {},
             "sameline": false,
-            "size": {},
             "roundingType": 0,
-            "roundingAmount": 0.0,
             "colors": []
         }
     }
