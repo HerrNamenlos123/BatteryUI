@@ -3,6 +3,7 @@
 #include "BatteryUI/common.h"
 #include "BatteryUI/FileWatcher.h"
 #include "BatteryUI/serialize.h"
+#include "BatteryUI/Property.h"
 
 namespace BatteryUI {
 

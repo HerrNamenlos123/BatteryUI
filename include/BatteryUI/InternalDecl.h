@@ -5,14 +5,18 @@
 namespace BatteryUI {
 
 	struct vec2_opt;
+	struct ButtonDefaultStyle;
+	struct DropdownDefaultStyle;
 	
 	namespace Internal {
 
-		inline void PushButtonDefaultStyle(bool& half_round);
-        inline void PopButtonDefaultStyle();
+		inline std::function<void(void)> redrawRequestCallback;
+
         inline void ApplyColorScheme();
         inline void LoadColorScheme();
-        inline vec2_opt& GetButtonDefaultSize();
 		
+		inline ButtonDefaultStyle* GetButtonDefaults();
+		inline DropdownDefaultStyle* GetDropdownDefaults();
+
 	}
 }

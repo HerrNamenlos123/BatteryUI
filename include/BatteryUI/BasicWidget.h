@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BatteryUI/common.h"
+#include "BatteryUI/Style.h"
+#include "BatteryUI/InternalDecl.h"
 
 namespace BatteryUI {
 	
@@ -24,6 +26,7 @@ namespace BatteryUI {
 		std::string getIdentifier() {
 			return name + "##BatteryUI" + std::to_string(id);
 		}
+		size_t id = 0;
 
 	private:
 		void newID() {
@@ -31,7 +34,6 @@ namespace BatteryUI {
 			__id_counter++;
 		}
 
-		size_t id = 0;
 		inline static size_t __id_counter = 0;
 	};
 	

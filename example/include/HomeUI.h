@@ -2,7 +2,8 @@
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "BatteryUI/BatteryUI.h"    // This must be included after imgui.h!
+
+#include "BatteryUI/BatteryUI.h"    // This must be included AFTER ImGui!
 
 #define STYLESHEET "../resources/stylesheet.json"
 #define ROBOTO_FONT "../resources/roboto.medium.ttf"
@@ -15,11 +16,15 @@ struct UI : BatteryUI::RootUI {
     BatteryUI::Window window;
     BatteryUI::Button save;
     BatteryUI::Button load;
+    BatteryUI::Dropdown drop1;
+    BatteryUI::Dropdown drop2;
 
     UI() : BatteryUI::RootUI(STYLESHEET) {
         loadFonts();
         save.name = "Save";
         load.name = "Load";
+        drop1.name = "Dropdown";
+        drop2.name = "Hehe";
     }
 
     void loadFonts() {

@@ -2,18 +2,12 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/RootUI.h"
-#include "BatteryUI/Button.h"
+
+#include "BatteryUI/Widgets/Button.h"
+#include "BatteryUI/Widgets/Dropdown.h"
 
 namespace BatteryUI {
 	namespace Internal {
-
-        inline void PushButtonDefaultStyle(bool& half_round) {
-            RootUI::defaults.button.push(half_round);
-        }
-
-        inline void PopButtonDefaultStyle() {
-            RootUI::defaults.button.pop();
-        }
 		
         inline void ApplyColorScheme() {
             RootUI::defaults.colorScheme.apply();
@@ -22,9 +16,15 @@ namespace BatteryUI {
         inline void LoadColorScheme() {
             RootUI::defaults.colorScheme.load();
         }
+
+
 		
-        inline vec2_opt& GetButtonDefaultSize() {
-            return RootUI::defaults.button.size;
+        inline ButtonDefaultStyle* GetButtonDefaults() {
+            return &RootUI::defaults.button;
+        }
+
+        inline DropdownDefaultStyle* GetDropdownDefaults() {
+            return &RootUI::defaults.dropdown;
         }
 
 	}

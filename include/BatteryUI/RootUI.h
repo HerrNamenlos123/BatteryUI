@@ -3,8 +3,12 @@
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/Window.h"
+#include "BatteryUI/RedrawNotifier.h"
 
-#include "BatteryUI/Button.h"
+#include "BatteryUI/Widgets/Button.h"
+#include "BatteryUI/Widgets/Dropdown.h"
+
+#define HOTRELOAD_UPDATE_INTERVAL_MS 1000
 
 namespace BatteryUI {
 
@@ -14,6 +18,7 @@ namespace BatteryUI {
 		ColorScheme colorScheme;
 		
 		ButtonDefaultStyle button;	// Widgets are not pushed here, they are pushed per-item
+		DropdownDefaultStyle dropdown;
 
 		void push() {
 			style.push();
@@ -30,6 +35,7 @@ namespace BatteryUI {
 			EXPORT_ITEM(style);
 			EXPORT_ITEM(colorScheme);
 			EXPORT_ITEM(button);
+			EXPORT_ITEM(dropdown);
 		}
 
 		DefaultStyles() {
@@ -39,6 +45,9 @@ namespace BatteryUI {
 
 			Button::Presets::load();
 			button = ButtonDefaultStyle(Button::Presets::Modern);
+
+			Dropdown::Presets::load();
+			dropdown = DropdownDefaultStyle(Dropdown::Presets::Modern);
 		}
 	};
 	
@@ -46,7 +55,7 @@ namespace BatteryUI {
 	public:
 		inline static DefaultStyles defaults;
 
-		RootUI(const std::string& styleSheet) : watcher(styleSheet) {
+		RootUI(const std::string& styleSheet) : watcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
 			this->styleSheet = styleSheet;
 			defaults = DefaultStyles();
 			window.name = "Style Manager";
@@ -106,7 +115,7 @@ namespace BatteryUI {
 		}
 
 		void drawStyleManagerWindow() {
-			window.draw([&] {
+			window([&] {
 				ImGui::Text("Hello worlds");
 				if (ImGui::Button("Save##lol")) {
 					saveStyleSheet();
@@ -123,6 +132,7 @@ namespace BatteryUI {
 	private:
 		std::string styleSheet;
 		FileWatcher watcher;
+		RedrawNotifier redraw;
 
 		Window window;
 	};

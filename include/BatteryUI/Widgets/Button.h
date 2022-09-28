@@ -1,8 +1,6 @@
 #pragma once
 
 #include "BatteryUI/common.h"
-#include "BatteryUI/Style.h"
-#include "BatteryUI/InternalDecl.h"
 #include "BatteryUI/BasicWidget.h"
 
 namespace BatteryUI {
@@ -19,8 +17,8 @@ namespace BatteryUI {
 			HALF_ROUND,				// Radius is half the button width
 		};
 		enum class RoundingType roundingType = RoundingType::NONE;
-		float roundingAmount = 0.f;
-		vec2_opt size;
+		ImGuiProperty roundingAmount;
+		Property<ImVec2> size;
 		ColorScheme colors;
 
 		Button() {
@@ -31,52 +29,11 @@ namespace BatteryUI {
 			this->name = name;
 		}
 
-		void draw() {
-			bool half_round = false;
-			vec2_opt defaultSize;
-			style.push();
-			colors.push();
-			Internal::PushButtonDefaultStyle(half_round);
-
-			if (half_round)
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, (actSize.x > actSize.y) ? (actSize.y / 2.f) : (actSize.x / 2.f));
-
-			if (roundingType == RoundingType::ROUNDED)
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingAmount);
-			else if (roundingType == RoundingType::HALF_ROUND)
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, (actSize.x > actSize.y) ? (actSize.y / 2.f) : (actSize.x / 2.f));
-
-			vec2 s = { 0, 0 };
-			if (Internal::GetButtonDefaultSize().has_value())
-				s = Internal::GetButtonDefaultSize().value();
-			if (size.has_value())
-				s = size.value();
-
-			if (sameline) ImGui::SameLine();
-			
-			clicked = ImGui::Button(getIdentifier().c_str(), s);
-			actSize = ImGui::GetItemRectSize();
-			held = ImGui::IsItemActive();
-			hovered = ImGui::IsItemHovered();
-			
-			if (roundingType == RoundingType::ROUNDED)
-				ImGui::PopStyleVar();
-			else if (roundingType == RoundingType::HALF_ROUND)
-				ImGui::PopStyleVar();
-			
-			if (half_round)
-				ImGui::PopStyleVar();
-
-			Internal::PopButtonDefaultStyle();
-			colors.pop();
-			style.pop();
-		}
-
 		struct ButtonPreset {
 			Style style;
 			enum class Button::RoundingType roundingType = Button::RoundingType::NONE;
 			float roundingAmount = 0.f;
-			vec2_opt size;
+			Property<ImVec2> size;
 			ColorScheme colors;
 		};
 
@@ -88,11 +45,15 @@ namespace BatteryUI {
 			colors = preset.colors;
 		}
 
+		void operator()() {
+			draw();
+		}
+
 		template <class Archive>
 		void load(Archive& ar) {
 			EXPORT_ITEM(style);
 			EXPORT_ITEM(sameline);
-			EXPORT_ITEM(size);
+			//EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
 			EXPORT_ITEM(roundingAmount);
 			EXPORT_ITEM_NESTED(colors, colors);
@@ -102,7 +63,7 @@ namespace BatteryUI {
 		void save(Archive& ar) const {
 			EXPORT_ITEM(style);
 			EXPORT_ITEM(sameline);
-			EXPORT_ITEM(size);
+			//EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
 			EXPORT_ITEM(roundingAmount);
 			EXPORT_ITEM_NESTED(colors, colors);
@@ -126,14 +87,16 @@ namespace BatteryUI {
 		};
 
 	private:
-		vec2 actSize;
+		void draw();
+
+		ImVec2 actSize;
 	};
 
 	struct ButtonDefaultStyle {
 		Style style;
 		enum class Button::RoundingType roundingType = Button::RoundingType::NONE;
 		float roundingAmount = 0.f;
-		vec2_opt size;
+		Property<ImVec2> size;
 		ColorScheme colors;
 		
 		ButtonDefaultStyle() {}
@@ -170,11 +133,49 @@ namespace BatteryUI {
 		template <class Archive>
 		void serialize(Archive& ar) {
 			EXPORT_ITEM(style);
-			EXPORT_ITEM(size);
+			//EXPORT_ITEM(size);
 			EXPORT_ITEM(roundingType);
 			EXPORT_ITEM(roundingAmount);
 			EXPORT_ITEM_NESTED(colors, colors);
 		}
 	};
+
+	inline void Button::draw() {
+		bool half_round = false;
+		Internal::GetButtonDefaults()->push(half_round);
+		style.push();
+		colors.push();
+
+		if (half_round)
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, (actSize.x > actSize.y) ? (actSize.y / 2.f) : (actSize.x / 2.f));
+
+		if (roundingType == RoundingType::ROUNDED)
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingAmount);
+		else if (roundingType == RoundingType::HALF_ROUND)
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, (actSize.x > actSize.y) ? (actSize.y / 2.f) : (actSize.x / 2.f));
+
+		ImVec2 s = { 0, 0 };
+		Internal::GetButtonDefaults()->size.get(s);
+		size.get(s);
+
+		if (sameline) ImGui::SameLine();
+
+		clicked = ImGui::Button(getIdentifier().c_str(), s);
+		actSize = ImGui::GetItemRectSize();
+		held = ImGui::IsItemActive();
+		hovered = ImGui::IsItemHovered();
+
+		if (roundingType == RoundingType::ROUNDED)
+			ImGui::PopStyleVar();
+		else if (roundingType == RoundingType::HALF_ROUND)
+			ImGui::PopStyleVar();
+
+		if (half_round)
+			ImGui::PopStyleVar();
+
+		colors.pop();
+		style.pop();
+		Internal::GetButtonDefaults()->pop();
+	}
 	
 }

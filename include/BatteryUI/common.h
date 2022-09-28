@@ -16,3 +16,17 @@
 #include "BatteryUI/json.hpp"
 
 #include "BatteryUI/exception.h"
+
+// JSON serialization for ImVec4
+inline void to_json(nlohmann::json& j, const ImVec4& v) {
+	j = nlohmann::json::array({
+		v.x, v.y, v.z, v.w
+	});
+}
+
+inline void from_json(const nlohmann::json& j, ImVec4& v) {
+	v.x = j.at(0);
+	v.y = j.at(1);
+	v.z = j.at(2);
+	v.w = j.at(3);
+}

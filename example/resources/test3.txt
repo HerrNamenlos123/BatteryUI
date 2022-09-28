@@ -1,0 +1,4 @@
+{
+    "type": "ITEM_WIDTH",
+    "value": 100.0
+}
