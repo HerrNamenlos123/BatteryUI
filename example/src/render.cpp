@@ -1,4 +1,5 @@
 
+#include <stack>
 #include "HomeUI.h"
 #include "GLFW/glfw3.h"
 
@@ -7,9 +8,10 @@ std::unique_ptr<UI> ui; // Global instance
 void setupUI() {
 
     ui = BatteryUI::Setup<UI>([&] {     // The first parameter is a lambda function callback which when called
-        glfwPostEmptyEvent();           // tell you to re-render the screen (for example when a loading bar is
-    });                                 // visible. Can be ignored if framerate is always high. Any additional
-                                        // parameters are forwarded to your UI class constructor
+        glfwPostEmptyEvent();                               // tell you to re-render the screen (for example when a loading bar is
+    });                                                     // visible. Can be ignored if framerate is always high. Any additional
+                                                            // parameters are forwarded to your UI class constructor
+
 
 }
 

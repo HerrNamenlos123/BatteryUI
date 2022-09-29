@@ -93,7 +93,7 @@ namespace BatteryUI {
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-        ui->defaults.style.spacing.framePadding = { 10, 10 };
+        ui->defaults.imguiStyle.framePadding = { 10, 10 };
     }
 
 }

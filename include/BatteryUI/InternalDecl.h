@@ -4,9 +4,8 @@
 
 namespace BatteryUI {
 
-	struct vec2_opt;
-	struct ButtonDefaultStyle;
-	struct DropdownDefaultStyle;
+	struct ButtonStyle;
+	struct DropdownStyle;
 	
 	namespace Internal {
 
@@ -15,8 +14,8 @@ namespace BatteryUI {
         inline void ApplyColorScheme();
         inline void LoadColorScheme();
 		
-		inline ButtonDefaultStyle* GetButtonDefaults();
-		inline DropdownDefaultStyle* GetDropdownDefaults();
+		inline ButtonStyle* GetButtonDefaults();
+		inline DropdownStyle* GetDropdownDefaults();
 
 	}
 }

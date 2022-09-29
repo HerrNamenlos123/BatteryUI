@@ -10,20 +10,20 @@ namespace BatteryUI {
 	namespace Internal {
 		
         inline void ApplyColorScheme() {
-            RootUI::defaults.colorScheme.apply();
+            //RootUI::defaults.colorScheme.apply();
         }
 		
         inline void LoadColorScheme() {
-            RootUI::defaults.colorScheme.load();
+            //RootUI::defaults.colorScheme.load();
         }
 
 
 		
-        inline ButtonDefaultStyle* GetButtonDefaults() {
+        inline ButtonStyle* GetButtonDefaults() {
             return &RootUI::defaults.button;
         }
 
-        inline DropdownDefaultStyle* GetDropdownDefaults() {
+        inline DropdownStyle* GetDropdownDefaults() {
             return &RootUI::defaults.dropdown;
         }
 

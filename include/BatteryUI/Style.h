@@ -38,7 +38,7 @@ namespace BatteryUI {
 			}
 		};
 
-		size_t size() const {
+		[[nodiscard]] size_t size() const {
 			return colors.size();
 		}
 
@@ -106,300 +106,513 @@ namespace BatteryUI {
 
 
 
+	struct ImGuiStyle {
 
+        ImGuiPropFloat<ImGuiStyleVar_Alpha> alpha;
+        ImGuiPropFloat<ImGuiStyleVar_DisabledAlpha> disabledAlpha;
 
+        ImGuiPropVec2<ImGuiStyleVar_WindowPadding> windowPadding;
+        ImGuiPropFloat<ImGuiStyleVar_WindowRounding> windowRounding;
+        ImGuiPropFloat<ImGuiStyleVar_WindowBorderSize> windowBorderSize;
+        ImGuiPropVec2<ImGuiStyleVar_WindowMinSize> windowMinSize;
+        ImGuiPropFloat<ImGuiStyleVar_WindowTitleAlign> windowTitleAlignment;
 
-	struct Colors {
-		std::optional<float> alpha;
-		std::optional<float> disabledAlpha;
+        ImGuiPropFloat<ImGuiStyleVar_ChildRounding> childRounding;
+        ImGuiPropFloat<ImGuiStyleVar_ChildBorderSize> childBorderSize;
 
-		void push() {
-			PUSH_STYLE(alpha, ImGuiStyleVar_Alpha);
-			PUSH_STYLE(disabledAlpha, ImGuiStyleVar_DisabledAlpha);
-		}
+        ImGuiPropFloat<ImGuiStyleVar_PopupRounding> popupRounding;
+        ImGuiPropFloat<ImGuiStyleVar_PopupBorderSize> popupBorderSize;
 
-		void pop() {
-			POP_STYLE(alpha);
-			POP_STYLE(disabledAlpha);
-		}
+        ImGuiPropVec2<ImGuiStyleVar_FramePadding> framePadding;
+        ImGuiPropFloat<ImGuiStyleVar_FrameRounding> frameRounding;
+        ImGuiPropFloat<ImGuiStyleVar_FrameBorderSize> frameBorderSize;
 
-		bool has_value() const {
-			return alpha.has_value() || disabledAlpha.has_value();
-		}
-		
-		template <class Archive> 
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE_OPT(float, alpha);
-			SAVE_ITEM_IF_VALUE_OPT(float, disabledAlpha);
-		}
-		
-		template <class Archive> 
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS_OPT(float, alpha);
-			LOAD_ITEM_IF_EXISTS_OPT(float, disabledAlpha);
-		}
-	};
+        ImGuiPropVec2<ImGuiStyleVar_ItemSpacing> itemSpacing;
+        ImGuiPropVec2<ImGuiStyleVar_ItemInnerSpacing> itemInnerSpacing;
+        ImGuiPropFloat<ImGuiStyleVar_IndentSpacing> indentSpacing;
 
-	struct Spacing {
-		vec2_opt windowPadding;
-		vec2_opt framePadding;
-		vec2_opt cellPadding;
-		vec2_opt itemSpacing;
-		vec2_opt itemInnerSpacing;
-		std::optional<float> indentSpacing;
-		std::optional<float> scrollbarSize;
-		std::optional<float> grabMinSize;
+        ImGuiPropVec2<ImGuiStyleVar_CellPadding> cellPadding;
+        ImGuiPropFloat<ImGuiStyleVar_ScrollbarSize> scrollbarSize;
+        ImGuiPropFloat<ImGuiStyleVar_ScrollbarRounding> scrollbarRounding;
+
+        ImGuiPropFloat<ImGuiStyleVar_GrabMinSize> grabMinSize;
+        ImGuiPropFloat<ImGuiStyleVar_GrabRounding> grabRounding;
+        ImGuiPropFloat<ImGuiStyleVar_TabRounding> tabRounding;
+
+        ImGuiPropVec2<ImGuiStyleVar_ButtonTextAlign> buttonTextAlign;
+        ImGuiPropVec2<ImGuiStyleVar_SelectableTextAlign> selectableTextAlign;
 		
 		void push() {
-			PUSH_STYLE(windowPadding, ImGuiStyleVar_WindowPadding);
-			PUSH_STYLE(framePadding, ImGuiStyleVar_FramePadding);
-			PUSH_STYLE(cellPadding, ImGuiStyleVar_CellPadding);
-			PUSH_STYLE(itemSpacing, ImGuiStyleVar_ItemSpacing);
-			PUSH_STYLE(itemInnerSpacing, ImGuiStyleVar_ItemInnerSpacing);
-			PUSH_STYLE(indentSpacing, ImGuiStyleVar_IndentSpacing);
-			PUSH_STYLE(scrollbarSize, ImGuiStyleVar_ScrollbarSize);
-			PUSH_STYLE(grabMinSize, ImGuiStyleVar_GrabMinSize);
-		}
-
-		void pop() {
-			POP_STYLE(windowPadding);
-			POP_STYLE(framePadding);
-			POP_STYLE(cellPadding);
-			POP_STYLE(itemSpacing);
-			POP_STYLE(itemInnerSpacing);
-			POP_STYLE(indentSpacing);
-			POP_STYLE(scrollbarSize);
-			POP_STYLE(grabMinSize);
-		}
-
-		bool has_value() const {
-			return windowPadding.has_value() || 
-				   framePadding.has_value() || 
-				   cellPadding.has_value() || 
-				   itemSpacing.has_value() || 
-				   itemInnerSpacing.has_value() || 
-				   indentSpacing.has_value() || 
-				   scrollbarSize.has_value() || 
-				   grabMinSize.has_value();
-		}
-
-		template <class Archive>
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE(windowPadding);
-			SAVE_ITEM_IF_VALUE(framePadding);
-			SAVE_ITEM_IF_VALUE(cellPadding);
-			SAVE_ITEM_IF_VALUE(itemSpacing);
-			SAVE_ITEM_IF_VALUE(itemInnerSpacing);
-			SAVE_ITEM_IF_VALUE_OPT(float, indentSpacing);
-			SAVE_ITEM_IF_VALUE_OPT(float, scrollbarSize);
-			SAVE_ITEM_IF_VALUE_OPT(float, grabMinSize);
-		}
-
-		template <class Archive>
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS(windowPadding);
-			LOAD_ITEM_IF_EXISTS(framePadding);
-			LOAD_ITEM_IF_EXISTS(cellPadding);
-			LOAD_ITEM_IF_EXISTS(itemSpacing);
-			LOAD_ITEM_IF_EXISTS(itemInnerSpacing);
-			LOAD_ITEM_IF_EXISTS_OPT(float, indentSpacing);
-			LOAD_ITEM_IF_EXISTS_OPT(float, scrollbarSize);
-			LOAD_ITEM_IF_EXISTS_OPT(float, grabMinSize);
-		}
-	};
-
-	struct Borders {
-		std::optional<float> windowBorderSize;
-		std::optional<float> childBorderSize;
-		std::optional<float> popupBorderSize;
-		std::optional<float> frameBorderSize;
-		
-		void push() {
-			PUSH_STYLE(windowBorderSize, ImGuiStyleVar_WindowBorderSize);
-			PUSH_STYLE(childBorderSize, ImGuiStyleVar_ChildBorderSize);
-			PUSH_STYLE(popupBorderSize, ImGuiStyleVar_PopupBorderSize);
-			PUSH_STYLE(frameBorderSize, ImGuiStyleVar_FrameBorderSize);
-		}
-
-		void pop() {
-			POP_STYLE(windowBorderSize);
-			POP_STYLE(childBorderSize);
-			POP_STYLE(popupBorderSize);
-			POP_STYLE(frameBorderSize);
-		}
-
-		bool has_value() const {
-			return  windowBorderSize.has_value() ||
-				    childBorderSize.has_value() ||
-				    popupBorderSize.has_value() ||
-				    frameBorderSize.has_value();
-		}
-
-		template <class Archive>
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE_OPT(float, windowBorderSize);
-			SAVE_ITEM_IF_VALUE_OPT(float, childBorderSize);
-			SAVE_ITEM_IF_VALUE_OPT(float, popupBorderSize);
-			SAVE_ITEM_IF_VALUE_OPT(float, frameBorderSize);
-		}
-
-		template <class Archive>
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS_OPT(float, windowBorderSize);
-			LOAD_ITEM_IF_EXISTS_OPT(float, childBorderSize);
-			LOAD_ITEM_IF_EXISTS_OPT(float, popupBorderSize);
-			LOAD_ITEM_IF_EXISTS_OPT(float, frameBorderSize);
-		}
-	};
-
-	struct Rounding {
-		std::optional<float> windowRounding;
-		std::optional<float> childRounding;
-		std::optional<float> frameRounding;
-		std::optional<float> popupRounding;
-		std::optional<float> scrollbarRounding;
-		std::optional<float> grabRounding;
-		std::optional<float> tabRounding;
-		
-		void push() {
-			PUSH_STYLE(windowRounding, ImGuiStyleVar_WindowRounding);
-			PUSH_STYLE(childRounding, ImGuiStyleVar_ChildRounding);
-			PUSH_STYLE(frameRounding, ImGuiStyleVar_FrameRounding);
-			PUSH_STYLE(popupRounding, ImGuiStyleVar_PopupRounding);
-			PUSH_STYLE(scrollbarRounding, ImGuiStyleVar_ScrollbarRounding);
-			PUSH_STYLE(grabRounding, ImGuiStyleVar_GrabRounding);
-			PUSH_STYLE(tabRounding, ImGuiStyleVar_TabRounding);
-		}
-
-		void pop() {
-			POP_STYLE(windowRounding);
-			POP_STYLE(childRounding);
-			POP_STYLE(frameRounding);
-			POP_STYLE(popupRounding);
-			POP_STYLE(scrollbarRounding);
-			POP_STYLE(grabRounding);
-			POP_STYLE(tabRounding);
-		}
-
-		bool has_value() const {
-			return  windowRounding.has_value() ||
-					childRounding.has_value() ||
-					frameRounding.has_value() ||
-					popupRounding.has_value() ||
-					scrollbarRounding.has_value() ||
-					grabRounding.has_value() ||
-					tabRounding.has_value();
-		}
-
-		template <class Archive>
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE_OPT(float, windowRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, childRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, frameRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, popupRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, scrollbarRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, grabRounding);
-			SAVE_ITEM_IF_VALUE_OPT(float, tabRounding);
-		}
-
-		template <class Archive>
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS_OPT(float, windowRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, childRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, frameRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, popupRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, scrollbarRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, grabRounding);
-			LOAD_ITEM_IF_EXISTS_OPT(float, tabRounding);
-		}
-	};
-
-	struct Alignment {
-		std::optional<float> windowTitleAlignment;
-		std::optional<float> buttonTextAlign;
-		std::optional<float> selectableTextAlign;
-
-		void push() {
-			PUSH_STYLE(windowTitleAlignment, ImGuiStyleVar_WindowTitleAlign);
-			PUSH_STYLE(buttonTextAlign, ImGuiStyleVar_ButtonTextAlign);
-			PUSH_STYLE(selectableTextAlign, ImGuiStyleVar_SelectableTextAlign);
-		}
-
-		void pop() {
-			POP_STYLE(windowTitleAlignment);
-			POP_STYLE(buttonTextAlign);
-			POP_STYLE(selectableTextAlign);
-		}
-
-		bool has_value() const {
-			return windowTitleAlignment.has_value() ||
-				   buttonTextAlign.has_value() ||
-				   selectableTextAlign.has_value();
-		}
-
-		template <class Archive>
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE_OPT(float, windowTitleAlignment);
-			SAVE_ITEM_IF_VALUE_OPT(float, buttonTextAlign);
-			SAVE_ITEM_IF_VALUE_OPT(float, selectableTextAlign);
-		}
-
-		template <class Archive>
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS_OPT(float, windowTitleAlignment);
-			LOAD_ITEM_IF_EXISTS_OPT(float, buttonTextAlign);
-			LOAD_ITEM_IF_EXISTS_OPT(float, selectableTextAlign);
-		}
-	};
-
-	struct Style {
-		Colors colors;
-		Spacing spacing;
-		Borders borders;
-		Rounding rounding;
-		Alignment alignment;
-		
-		void push() {
-			colors.push();
-			spacing.push();
-			borders.push();
-			rounding.push();
-			alignment.push();
+            alpha.push();
+            disabledAlpha.push();
+            windowPadding.push();
+            windowRounding.push();
+            windowBorderSize.push();
+            windowMinSize.push();
+            windowTitleAlignment.push();
+            childRounding.push();
+            childBorderSize.push();
+            popupRounding.push();
+            popupBorderSize.push();
+            framePadding.push();
+            frameRounding.push();
+            frameBorderSize.push();
+            itemSpacing.push();
+            itemInnerSpacing.push();
+            indentSpacing.push();
+            cellPadding.push();
+            scrollbarSize.push();
+            scrollbarRounding.push();
+            grabMinSize.push();
+            grabRounding.push();
+            tabRounding.push();
+            buttonTextAlign.push();
+            selectableTextAlign.push();
 		}
 		
 		void pop() {
-			colors.pop();
-			spacing.pop();
-			borders.pop();
-			rounding.pop();
-			alignment.pop();
-		}
-
-		bool has_value() const {
-			return colors.has_value() ||
-				   spacing.has_value() ||
-				   borders.has_value() ||
-				   rounding.has_value() ||
-				   alignment.has_value();
-		}
-
-		template <class Archive>
-		void save(Archive& ar) const {
-			SAVE_ITEM_IF_VALUE(colors);
-			SAVE_ITEM_IF_VALUE(spacing);
-			SAVE_ITEM_IF_VALUE(borders);
-			SAVE_ITEM_IF_VALUE(rounding);
-			SAVE_ITEM_IF_VALUE(alignment);
-		}
-
-		template <class Archive>
-		void load(Archive& ar) {
-			LOAD_ITEM_IF_EXISTS(colors);
-			LOAD_ITEM_IF_EXISTS(spacing);
-			LOAD_ITEM_IF_EXISTS(borders);
-			LOAD_ITEM_IF_EXISTS(rounding);
-			LOAD_ITEM_IF_EXISTS(alignment);
+            alpha.pop();
+            disabledAlpha.pop();
+            windowPadding.pop();
+            windowRounding.pop();
+            windowBorderSize.pop();
+            windowMinSize.pop();
+            windowTitleAlignment.pop();
+            childRounding.pop();
+            childBorderSize.pop();
+            popupRounding.pop();
+            popupBorderSize.pop();
+            framePadding.pop();
+            frameRounding.pop();
+            frameBorderSize.pop();
+            itemSpacing.pop();
+            itemInnerSpacing.pop();
+            indentSpacing.pop();
+            cellPadding.pop();
+            scrollbarSize.pop();
+            scrollbarRounding.pop();
+            grabMinSize.pop();
+            grabRounding.pop();
+            tabRounding.pop();
+            buttonTextAlign.pop();
+            selectableTextAlign.pop();
 		}
 	};
-	
+
+    // JSON serialization
+#define IMGUISTYLE_TO_JSON(var) if (p.var.has_value()) j[#var] = p.var;
+#define IMGUISTYLE_FROM_JSON(var) try { j[#var].get_to(p.var); } catch (...) {}
+
+    inline void to_json(nlohmann::json& j, const ImGuiStyle& p) {
+        IMGUISTYLE_TO_JSON(alpha);
+        IMGUISTYLE_TO_JSON(disabledAlpha);
+        IMGUISTYLE_TO_JSON(windowPadding);
+        IMGUISTYLE_TO_JSON(windowRounding);
+        IMGUISTYLE_TO_JSON(windowBorderSize);
+        IMGUISTYLE_TO_JSON(windowMinSize);
+        IMGUISTYLE_TO_JSON(windowTitleAlignment);
+        IMGUISTYLE_TO_JSON(childRounding);
+        IMGUISTYLE_TO_JSON(childBorderSize);
+        IMGUISTYLE_TO_JSON(popupRounding);
+        IMGUISTYLE_TO_JSON(popupBorderSize);
+        IMGUISTYLE_TO_JSON(framePadding);
+        IMGUISTYLE_TO_JSON(frameRounding);
+        IMGUISTYLE_TO_JSON(frameBorderSize);
+        IMGUISTYLE_TO_JSON(itemSpacing);
+        IMGUISTYLE_TO_JSON(itemInnerSpacing);
+        IMGUISTYLE_TO_JSON(indentSpacing);
+        IMGUISTYLE_TO_JSON(cellPadding);
+        IMGUISTYLE_TO_JSON(scrollbarSize);
+        IMGUISTYLE_TO_JSON(scrollbarRounding);
+        IMGUISTYLE_TO_JSON(grabMinSize);
+        IMGUISTYLE_TO_JSON(grabRounding);
+        IMGUISTYLE_TO_JSON(tabRounding);
+        IMGUISTYLE_TO_JSON(buttonTextAlign);
+        IMGUISTYLE_TO_JSON(selectableTextAlign);
+    }
+
+    inline void from_json(const nlohmann::json& j, ImGuiStyle& p) {
+        IMGUISTYLE_FROM_JSON(alpha);
+        IMGUISTYLE_FROM_JSON(disabledAlpha);
+        IMGUISTYLE_FROM_JSON(windowPadding);
+        IMGUISTYLE_FROM_JSON(windowRounding);
+        IMGUISTYLE_FROM_JSON(windowBorderSize);
+        IMGUISTYLE_FROM_JSON(windowMinSize);
+        IMGUISTYLE_FROM_JSON(windowTitleAlignment);
+        IMGUISTYLE_FROM_JSON(childRounding);
+        IMGUISTYLE_FROM_JSON(childBorderSize);
+        IMGUISTYLE_FROM_JSON(popupRounding);
+        IMGUISTYLE_FROM_JSON(popupBorderSize);
+        IMGUISTYLE_FROM_JSON(framePadding);
+        IMGUISTYLE_FROM_JSON(frameRounding);
+        IMGUISTYLE_FROM_JSON(frameBorderSize);
+        IMGUISTYLE_FROM_JSON(itemSpacing);
+        IMGUISTYLE_FROM_JSON(itemInnerSpacing);
+        IMGUISTYLE_FROM_JSON(indentSpacing);
+        IMGUISTYLE_FROM_JSON(cellPadding);
+        IMGUISTYLE_FROM_JSON(scrollbarSize);
+        IMGUISTYLE_FROM_JSON(scrollbarRounding);
+        IMGUISTYLE_FROM_JSON(grabMinSize);
+        IMGUISTYLE_FROM_JSON(grabRounding);
+        IMGUISTYLE_FROM_JSON(tabRounding);
+        IMGUISTYLE_FROM_JSON(buttonTextAlign);
+        IMGUISTYLE_FROM_JSON(selectableTextAlign);
+    }
+
+
+
+
+    struct ImGuiColors {
+        ImGuiPropVec4<ImGuiCol_Text> text;
+        ImGuiPropVec4<ImGuiCol_TextDisabled> textDisabled;
+        ImGuiPropVec4<ImGuiCol_WindowBg> windowBackground;
+        ImGuiPropVec4<ImGuiCol_ChildBg> childBackground;
+        ImGuiPropVec4<ImGuiCol_PopupBg> popupBackground;
+        ImGuiPropVec4<ImGuiCol_Border> borderColor;
+        ImGuiPropVec4<ImGuiCol_BorderShadow> borderShadow;
+        ImGuiPropVec4<ImGuiCol_FrameBg> frameBackground;
+        ImGuiPropVec4<ImGuiCol_FrameBgHovered> frameBackgroundHovered;
+        ImGuiPropVec4<ImGuiCol_FrameBgActive> frameBackgroundActive;
+        ImGuiPropVec4<ImGuiCol_TitleBg> titleBackground;
+        ImGuiPropVec4<ImGuiCol_TitleBgActive> titleBackgroundActive;
+        ImGuiPropVec4<ImGuiCol_TitleBgCollapsed> titleBackgroundCollapsed;
+        ImGuiPropVec4<ImGuiCol_MenuBarBg> menubarBackground;
+        ImGuiPropVec4<ImGuiCol_ScrollbarBg> scrollbarBackground;
+        ImGuiPropVec4<ImGuiCol_ScrollbarGrab> scrollbarBackgroundGrab;
+        ImGuiPropVec4<ImGuiCol_ScrollbarGrabHovered> scrollbarGrabHovered;
+        ImGuiPropVec4<ImGuiCol_ScrollbarGrabActive> scrollbarGrabActive;
+        ImGuiPropVec4<ImGuiCol_CheckMark> checkmark;
+        ImGuiPropVec4<ImGuiCol_SliderGrab> sliderGrab;
+        ImGuiPropVec4<ImGuiCol_SliderGrabActive> sliderGrabActive;
+        ImGuiPropVec4<ImGuiCol_Button> button;
+        ImGuiPropVec4<ImGuiCol_ButtonHovered> buttonHovered;
+        ImGuiPropVec4<ImGuiCol_ButtonActive> buttonActive;
+        ImGuiPropVec4<ImGuiCol_Header> header;
+        ImGuiPropVec4<ImGuiCol_HeaderHovered> headerHovered;
+        ImGuiPropVec4<ImGuiCol_HeaderActive> headerActive;
+        ImGuiPropVec4<ImGuiCol_Separator> separator;
+        ImGuiPropVec4<ImGuiCol_SeparatorHovered> separatorHovered;
+        ImGuiPropVec4<ImGuiCol_SeparatorActive> separatorActive;
+        ImGuiPropVec4<ImGuiCol_ResizeGrip> resizeGrip;
+        ImGuiPropVec4<ImGuiCol_ResizeGripHovered> resizeGripHovered;
+        ImGuiPropVec4<ImGuiCol_ResizeGripActive> resizeGripActive;
+        ImGuiPropVec4<ImGuiCol_Tab> tab;
+        ImGuiPropVec4<ImGuiCol_TabHovered> tabHovered;
+        ImGuiPropVec4<ImGuiCol_TabActive> tabActive;
+        ImGuiPropVec4<ImGuiCol_TabUnfocused> tabUnfocused;
+        ImGuiPropVec4<ImGuiCol_TabUnfocusedActive> tabUnfocusedActive;
+        ImGuiPropVec4<ImGuiCol_PlotLines> plotLines;
+        ImGuiPropVec4<ImGuiCol_PlotLinesHovered> plotLinesHovered;
+        ImGuiPropVec4<ImGuiCol_PlotHistogram> plotHistogram;
+        ImGuiPropVec4<ImGuiCol_PlotHistogramHovered> plotHistogramHovered;
+        ImGuiPropVec4<ImGuiCol_TableHeaderBg> TableHeaderBackground;
+        ImGuiPropVec4<ImGuiCol_TableBorderStrong> tableBorderStrong;
+        ImGuiPropVec4<ImGuiCol_TableBorderLight> tableBorderLight;
+        ImGuiPropVec4<ImGuiCol_TableRowBg> tableRowBackground;
+        ImGuiPropVec4<ImGuiCol_TableRowBgAlt> tableRowBackgroundAlt;
+        ImGuiPropVec4<ImGuiCol_TextSelectedBg> textSelectedBackground;
+        ImGuiPropVec4<ImGuiCol_DragDropTarget> dragDropTarget;
+        ImGuiPropVec4<ImGuiCol_NavHighlight> navHighlight;
+        ImGuiPropVec4<ImGuiCol_NavWindowingHighlight> navWindowingHighlight;
+        ImGuiPropVec4<ImGuiCol_NavWindowingDimBg> navWindowingDimBackground;
+        ImGuiPropVec4<ImGuiCol_ModalWindowDimBg> modalWindowDimBackground;
+
+        void push() {
+            text.push();
+            textDisabled.push();
+            windowBackground.push();
+            childBackground.push();
+            popupBackground.push();
+            borderColor.push();
+            borderShadow.push();
+            frameBackground.push();
+            frameBackgroundHovered.push();
+            frameBackgroundActive.push();
+            titleBackground.push();
+            titleBackgroundActive.push();
+            titleBackgroundCollapsed.push();
+            menubarBackground.push();
+            scrollbarBackground.push();
+            scrollbarBackgroundGrab.push();
+            scrollbarGrabHovered.push();
+            scrollbarGrabActive.push();
+            checkmark.push();
+            sliderGrab.push();
+            sliderGrabActive.push();
+            button.push();
+            buttonHovered.push();
+            buttonActive.push();
+            header.push();
+            headerHovered.push();
+            headerActive.push();
+            separator.push();
+            separatorHovered.push();
+            separatorActive.push();
+            resizeGrip.push();
+            resizeGripHovered.push();
+            resizeGripActive.push();
+            tab.push();
+            tabHovered.push();
+            tabActive.push();
+            tabUnfocused.push();
+            tabUnfocusedActive.push();
+            plotLines.push();
+            plotLinesHovered.push();
+            plotHistogram.push();
+            plotHistogramHovered.push();
+            TableHeaderBackground.push();
+            tableBorderStrong.push();
+            tableBorderLight.push();
+            tableRowBackground.push();
+            tableRowBackgroundAlt.push();
+            textSelectedBackground.push();
+            dragDropTarget.push();
+            navHighlight.push();
+            navWindowingHighlight.push();
+            navWindowingDimBackground.push();
+            modalWindowDimBackground.push();
+        }
+
+        void pop() {
+            text.pop();
+            textDisabled.pop();
+            windowBackground.pop();
+            childBackground.pop();
+            popupBackground.pop();
+            borderColor.pop();
+            borderShadow.pop();
+            frameBackground.pop();
+            frameBackgroundHovered.pop();
+            frameBackgroundActive.pop();
+            titleBackground.pop();
+            titleBackgroundActive.pop();
+            titleBackgroundCollapsed.pop();
+            menubarBackground.pop();
+            scrollbarBackground.pop();
+            scrollbarBackgroundGrab.pop();
+            scrollbarGrabHovered.pop();
+            scrollbarGrabActive.pop();
+            checkmark.pop();
+            sliderGrab.pop();
+            sliderGrabActive.pop();
+            button.pop();
+            buttonHovered.pop();
+            buttonActive.pop();
+            header.pop();
+            headerHovered.pop();
+            headerActive.pop();
+            separator.pop();
+            separatorHovered.pop();
+            separatorActive.pop();
+            resizeGrip.pop();
+            resizeGripHovered.pop();
+            resizeGripActive.pop();
+            tab.pop();
+            tabHovered.pop();
+            tabActive.pop();
+            tabUnfocused.pop();
+            tabUnfocusedActive.pop();
+            plotLines.pop();
+            plotLinesHovered.pop();
+            plotHistogram.pop();
+            plotHistogramHovered.pop();
+            TableHeaderBackground.pop();
+            tableBorderStrong.pop();
+            tableBorderLight.pop();
+            tableRowBackground.pop();
+            tableRowBackgroundAlt.pop();
+            textSelectedBackground.pop();
+            dragDropTarget.pop();
+            navHighlight.pop();
+            navWindowingHighlight.pop();
+            navWindowingDimBackground.pop();
+            modalWindowDimBackground.pop();
+        }
+    };
+
+    // JSON serialization
+    inline void to_json(nlohmann::json& j, const ImGuiColors& p) {
+        IMGUISTYLE_TO_JSON(text);
+        IMGUISTYLE_TO_JSON(textDisabled);
+        IMGUISTYLE_TO_JSON(windowBackground);
+        IMGUISTYLE_TO_JSON(childBackground);
+        IMGUISTYLE_TO_JSON(popupBackground);
+        IMGUISTYLE_TO_JSON(borderColor);
+        IMGUISTYLE_TO_JSON(borderShadow);
+        IMGUISTYLE_TO_JSON(frameBackground);
+        IMGUISTYLE_TO_JSON(frameBackgroundHovered);
+        IMGUISTYLE_TO_JSON(frameBackgroundActive);
+        IMGUISTYLE_TO_JSON(titleBackground);
+        IMGUISTYLE_TO_JSON(titleBackgroundActive);
+        IMGUISTYLE_TO_JSON(titleBackgroundCollapsed);
+        IMGUISTYLE_TO_JSON(menubarBackground);
+        IMGUISTYLE_TO_JSON(scrollbarBackground);
+        IMGUISTYLE_TO_JSON(scrollbarBackgroundGrab);
+        IMGUISTYLE_TO_JSON(scrollbarGrabHovered);
+        IMGUISTYLE_TO_JSON(scrollbarGrabActive);
+        IMGUISTYLE_TO_JSON(checkmark);
+        IMGUISTYLE_TO_JSON(sliderGrab);
+        IMGUISTYLE_TO_JSON(sliderGrabActive);
+        IMGUISTYLE_TO_JSON(button);
+        IMGUISTYLE_TO_JSON(buttonHovered);
+        IMGUISTYLE_TO_JSON(buttonActive);
+        IMGUISTYLE_TO_JSON(header);
+        IMGUISTYLE_TO_JSON(headerHovered);
+        IMGUISTYLE_TO_JSON(headerActive);
+        IMGUISTYLE_TO_JSON(separator);
+        IMGUISTYLE_TO_JSON(separatorHovered);
+        IMGUISTYLE_TO_JSON(separatorActive);
+        IMGUISTYLE_TO_JSON(resizeGrip);
+        IMGUISTYLE_TO_JSON(resizeGripHovered);
+        IMGUISTYLE_TO_JSON(resizeGripActive);
+        IMGUISTYLE_TO_JSON(tab);
+        IMGUISTYLE_TO_JSON(tabHovered);
+        IMGUISTYLE_TO_JSON(tabActive);
+        IMGUISTYLE_TO_JSON(tabUnfocused);
+        IMGUISTYLE_TO_JSON(tabUnfocusedActive);
+        IMGUISTYLE_TO_JSON(plotLines);
+        IMGUISTYLE_TO_JSON(plotLinesHovered);
+        IMGUISTYLE_TO_JSON(plotHistogram);
+        IMGUISTYLE_TO_JSON(plotHistogramHovered);
+        IMGUISTYLE_TO_JSON(TableHeaderBackground);
+        IMGUISTYLE_TO_JSON(tableBorderStrong);
+        IMGUISTYLE_TO_JSON(tableBorderLight);
+        IMGUISTYLE_TO_JSON(tableRowBackground);
+        IMGUISTYLE_TO_JSON(tableRowBackgroundAlt);
+        IMGUISTYLE_TO_JSON(textSelectedBackground);
+        IMGUISTYLE_TO_JSON(dragDropTarget);
+        IMGUISTYLE_TO_JSON(navHighlight);
+        IMGUISTYLE_TO_JSON(navWindowingHighlight);
+        IMGUISTYLE_TO_JSON(navWindowingDimBackground);
+        IMGUISTYLE_TO_JSON(modalWindowDimBackground);
+    }
+
+    inline void from_json(const nlohmann::json& j, ImGuiColors& p) {
+        IMGUISTYLE_FROM_JSON(text);
+        IMGUISTYLE_FROM_JSON(textDisabled);
+        IMGUISTYLE_FROM_JSON(windowBackground);
+        IMGUISTYLE_FROM_JSON(childBackground);
+        IMGUISTYLE_FROM_JSON(popupBackground);
+        IMGUISTYLE_FROM_JSON(borderColor);
+        IMGUISTYLE_FROM_JSON(borderShadow);
+        IMGUISTYLE_FROM_JSON(frameBackground);
+        IMGUISTYLE_FROM_JSON(frameBackgroundHovered);
+        IMGUISTYLE_FROM_JSON(frameBackgroundActive);
+        IMGUISTYLE_FROM_JSON(titleBackground);
+        IMGUISTYLE_FROM_JSON(titleBackgroundActive);
+        IMGUISTYLE_FROM_JSON(titleBackgroundCollapsed);
+        IMGUISTYLE_FROM_JSON(menubarBackground);
+        IMGUISTYLE_FROM_JSON(scrollbarBackground);
+        IMGUISTYLE_FROM_JSON(scrollbarBackgroundGrab);
+        IMGUISTYLE_FROM_JSON(scrollbarGrabHovered);
+        IMGUISTYLE_FROM_JSON(scrollbarGrabActive);
+        IMGUISTYLE_FROM_JSON(checkmark);
+        IMGUISTYLE_FROM_JSON(sliderGrab);
+        IMGUISTYLE_FROM_JSON(sliderGrabActive);
+        IMGUISTYLE_FROM_JSON(button);
+        IMGUISTYLE_FROM_JSON(buttonHovered);
+        IMGUISTYLE_FROM_JSON(buttonActive);
+        IMGUISTYLE_FROM_JSON(header);
+        IMGUISTYLE_FROM_JSON(headerHovered);
+        IMGUISTYLE_FROM_JSON(headerActive);
+        IMGUISTYLE_FROM_JSON(separator);
+        IMGUISTYLE_FROM_JSON(separatorHovered);
+        IMGUISTYLE_FROM_JSON(separatorActive);
+        IMGUISTYLE_FROM_JSON(resizeGrip);
+        IMGUISTYLE_FROM_JSON(resizeGripHovered);
+        IMGUISTYLE_FROM_JSON(resizeGripActive);
+        IMGUISTYLE_FROM_JSON(tab);
+        IMGUISTYLE_FROM_JSON(tabHovered);
+        IMGUISTYLE_FROM_JSON(tabActive);
+        IMGUISTYLE_FROM_JSON(tabUnfocused);
+        IMGUISTYLE_FROM_JSON(tabUnfocusedActive);
+        IMGUISTYLE_FROM_JSON(plotLines);
+        IMGUISTYLE_FROM_JSON(plotLinesHovered);
+        IMGUISTYLE_FROM_JSON(plotHistogram);
+        IMGUISTYLE_FROM_JSON(plotHistogramHovered);
+        IMGUISTYLE_FROM_JSON(TableHeaderBackground);
+        IMGUISTYLE_FROM_JSON(tableBorderStrong);
+        IMGUISTYLE_FROM_JSON(tableBorderLight);
+        IMGUISTYLE_FROM_JSON(tableRowBackground);
+        IMGUISTYLE_FROM_JSON(tableRowBackgroundAlt);
+        IMGUISTYLE_FROM_JSON(textSelectedBackground);
+        IMGUISTYLE_FROM_JSON(dragDropTarget);
+        IMGUISTYLE_FROM_JSON(navHighlight);
+        IMGUISTYLE_FROM_JSON(navWindowingHighlight);
+        IMGUISTYLE_FROM_JSON(navWindowingDimBackground);
+        IMGUISTYLE_FROM_JSON(modalWindowDimBackground);
+    }
+
+    enum class RoundingType {
+        NONE,					// Hard corners
+        ROUNDED,				// Round corners
+        HALF_ROUND,				// Radius is half the button width
+    };
+
+    class Rounding {
+    public:
+        Rounding() = default;
+        Rounding(RoundingType type, float amount) {
+            this->type = type;
+            this->amount = amount;
+        }
+
+        void push() {
+            if (type == RoundingType::ROUNDED)
+                amount.push();
+            if (type == RoundingType::HALF_ROUND)
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 99999);
+        }
+
+        void pop() {
+            if (type == RoundingType::ROUNDED)
+                amount.pop();
+            if (type == RoundingType::HALF_ROUND)
+                ImGui::PopStyleVar();
+        }
+
+        ImGuiPropFloat<ImGuiStyleVar_FrameRounding> amount;
+        RoundingType type = RoundingType::NONE;
+    };
+
+    inline void to_json(nlohmann::json& j, const Rounding& p) {
+        j["amount"] = p.amount;
+        j["type"] = magic_enum::enum_name(p.type);
+    }
+    inline void from_json(const nlohmann::json& j, Rounding& p) {
+        j["amount"].get_to(p.amount);
+        auto opt = magic_enum::enum_cast<RoundingType>(j["type"]);
+        if (opt.has_value()) {
+            p.type = opt.value();
+        }
+    }
+
+    class SameLine {
+    public:
+        SameLine() = default;
+
+        SameLine& operator=(bool sameline) {
+            this->sameline = sameline;
+            return *this;
+        }
+
+        operator bool() {
+            return sameline;
+        }
+
+        void operator()() {
+            if (sameline) ImGui::SameLine();
+        }
+
+        friend void to_json(nlohmann::json& j, const SameLine& p) {
+            j = p.sameline;
+        }
+        friend void from_json(const nlohmann::json& j, SameLine& p) {
+            j.get_to(p.sameline);
+        }
+
+    private:
+        bool sameline = false;
+    };
+
 }

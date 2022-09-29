@@ -11,13 +11,14 @@ namespace BatteryUI {
 	
 	class BasicWidget {
 	public:
-		Style style;
-		bool sameline = false;
 		std::string name;
 
-		BasicWidget() {
+		explicit BasicWidget(const char* name_) : name(name_) {
 			newID();
 		}
+        explicit BasicWidget(const std::string& name_) : name(name_) {
+            newID();
+        }
 
 		BasicWidget(BasicWidget const& other) = delete;
 		void operator=(BasicWidget const& other) = delete;

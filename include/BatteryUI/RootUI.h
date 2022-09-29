@@ -2,7 +2,7 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
-#include "BatteryUI/Window.h"
+#include "BatteryUI/Widgets/Window.h"
 #include "BatteryUI/RedrawNotifier.h"
 
 #include "BatteryUI/Widgets/Button.h"
@@ -14,40 +14,31 @@ namespace BatteryUI {
 
 	struct DefaultStyles {
 		
-		Style style;
-		ColorScheme colorScheme;
+		ImGuiStyle imguiStyle;
+		ImGuiColors imguiColors;
 		
-		ButtonDefaultStyle button;	// Widgets are not pushed here, they are pushed per-item
-		DropdownDefaultStyle dropdown;
+		ButtonStyle button;
+		DropdownStyle dropdown;
 
-		void push() {
-			style.push();
-			colorScheme.push();
+		void push() {       // The Widgets' default styles are not pushed here
+			imguiStyle.push();
+			imguiColors.push();
 		}
 
 		void pop() {
-			style.pop();
-			colorScheme.pop();
-		}
-
-		template <class Archive>
-		void serialize(Archive& ar) {
-			EXPORT_ITEM(style);
-			EXPORT_ITEM(colorScheme);
-			EXPORT_ITEM(button);
-			EXPORT_ITEM(dropdown);
+            imguiColors.pop();
+            imguiStyle.pop();
 		}
 
 		DefaultStyles() {
-			style = Style();
-			
-			colorScheme = ColorScheme();
+            imguiStyle = ImGuiStyle();
+            imguiColors = ImGuiColors();
 
 			Button::Presets::load();
-			button = ButtonDefaultStyle(Button::Presets::Modern);
+			button = Button::Presets::Modern;
 
 			Dropdown::Presets::load();
-			dropdown = DropdownDefaultStyle(Dropdown::Presets::Modern);
+			dropdown = Dropdown::Presets::Modern;
 		}
 	};
 	
@@ -55,7 +46,7 @@ namespace BatteryUI {
 	public:
 		inline static DefaultStyles defaults;
 
-		RootUI(const std::string& styleSheet) : watcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
+		explicit RootUI(const std::string& styleSheet) : watcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
 			this->styleSheet = styleSheet;
 			defaults = DefaultStyles();
 			window.name = "Style Manager";

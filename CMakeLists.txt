@@ -29,6 +29,6 @@ set(HEADER_FILES
         include/BatteryUI/RootUI.h
         include/BatteryUI/serialize.h
         include/BatteryUI/Style.h
-        include/BatteryUI/Window.h)
+        include/BatteryUI/Widgets/Window.h)
 
 target_sources(BatteryUI INTERFACE ${HEADER_FILES})

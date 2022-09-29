@@ -12,38 +12,25 @@ namespace BatteryUI {
 	
 	class Window : public BasicWidget {
 	public:
-		Window() {
-			this->name = "BatteryUI Window";
-		}
-		
-		Window(const std::string& name, int flags = 0) {
-			this->name = name;
-			this->flags = flags;
-		}
+		Window() : BasicWidget("BatteryUI Window") {}
+		explicit Window(const std::string& name, int flags = 0) : BasicWidget(name), flags(flags) {}
 
-		void operator()(std::function<void(void)> callback) {
+		void operator()(const std::function<void(void)>& callback) {
 			draw(callback);
 		}
 
-		template <class Archive>
-		void serialize(Archive& ar) {
-			EXPORT_ITEM(style);
-		}
-
 	private:
-		void draw(std::function<void(void)> callback);
+		void draw(const std::function<void(void)>& callback);
 
 		int flags = 0;
 	};
 
-	inline void Window::draw(std::function<void(void)> callback) {
-		style.push();
+	inline void Window::draw(const std::function<void(void)>& callback) {
 		ImGui::Begin(getIdentifier().c_str(), nullptr, flags);
 
 		callback();		// Do the user rendering here
 
 		ImGui::End();
-		style.pop();
 	}
 	
 }
