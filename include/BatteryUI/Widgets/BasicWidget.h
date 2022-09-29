@@ -5,6 +5,9 @@
 #include "BatteryUI/InternalDecl.h"
 
 namespace BatteryUI {
+
+    // Every class derived from BasicWidget gets a unique ID,
+    // which is pushed to ImGui for context separation
 	
 	class BasicWidget {
 	public:
@@ -23,18 +26,18 @@ namespace BatteryUI {
 		BasicWidget& operator=(BasicWidget&& other) = default;
 
 	protected:
-		std::string getIdentifier() {
+		[[nodiscard]] std::string getIdentifier() const {
 			return name + "##BatteryUI" + std::to_string(id);
 		}
 		size_t id = 0;
 
 	private:
 		void newID() {
-			id = __id_counter;
-			__id_counter++;
+			id = _id_counter;
+			_id_counter++;
 		}
 
-		inline static size_t __id_counter = 0;
+		inline static size_t _id_counter = 0;
 	};
 	
 }

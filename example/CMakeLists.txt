@@ -42,8 +42,8 @@ add_subdirectory(.. bin)    # Include the actual BatteryUI library
 # Target definition #
 #####################
 
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "include/*")
-file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*")
+set(HEADER_FILES include/HomeUI.h)
+set(SRC_FILES src/backend_glfw.cpp src/backend_opengl3.cpp src/main.cpp src/render.cpp)
 
 add_executable(example ${SRC_FILES} ${HEADER_FILES})
 

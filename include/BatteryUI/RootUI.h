@@ -77,8 +77,8 @@ namespace BatteryUI {
 				}
 
 				try {
-					cereal::JSONInputArchive ar(file);
-					archive(ar);
+					//cereal::JSONInputArchive ar(file);
+					//archive(ar);
 				}
 				catch (const std::exception& e) {
 					file.close();
@@ -104,8 +104,8 @@ namespace BatteryUI {
 			}
 
 			try {
-				cereal::JSONOutputArchive ar(file);
-				archive(ar);
+				//cereal::JSONOutputArchive ar(file);
+				//archive(ar);
 			}
 			catch (const std::exception& e) {
 				printf("[%s]: Error while saving style sheet: %s\n", __FUNCTION__, e.what());
@@ -126,8 +126,8 @@ namespace BatteryUI {
 			});
 		}
 
-		virtual void archive(cereal::JSONInputArchive& ar) = 0;
-		virtual void archive(cereal::JSONOutputArchive& ar) = 0;
+		//virtual void archive(cereal::JSONInputArchive& ar) = 0;
+		//virtual void archive(cereal::JSONOutputArchive& ar) = 0;
 
 	private:
 		std::string styleSheet;

@@ -1,23 +1,24 @@
 #pragma once
 
 #include "BatteryUI/common.h"
-#include "BatteryUI/BasicWidget.h"
+#include "BasicWidget.h"
 
 namespace BatteryUI {
 	
 	class Button : public BasicWidget {
 	public:
-		bool clicked = false;		// This is only true for one frame
+        enum class RoundingType {
+            NONE,					// Hard corners
+            ROUNDED,				// Round corners
+            HALF_ROUND,				// Radius is half the button width
+        };
+
+		bool clicked = false;		// Single trigger when clicked
 		bool held = false;
 		bool hovered = false;
 
-		enum class RoundingType {
-			NONE,					// Hard corners
-			ROUNDED,				// Round corners
-			HALF_ROUND,				// Radius is half the button width
-		};
 		enum RoundingType roundingType = RoundingType::NONE;
-		//ImGuiProperty roundingAmount;
+		ImGuiBridgeProperty roundingAmount;
 		Property<ImVec2> size;
 		ColorScheme colors;
 
@@ -25,7 +26,7 @@ namespace BatteryUI {
 			this->name = "Button";
 		}
 
-		Button(const std::string& name) {
+		explicit Button(const std::string& name) {
 			this->name = name;
 		}
 
@@ -35,7 +36,7 @@ namespace BatteryUI {
 			float roundingAmount = 0.f;
 			Property<ImVec2> size;
 			ColorScheme colors;
-            ButtonPreset() {}
+            ButtonPreset() {};
 		};
 
 		void loadPreset(struct ButtonPreset preset) {

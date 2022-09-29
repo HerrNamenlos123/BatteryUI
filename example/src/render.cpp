@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 
 std::unique_ptr<UI> ui; // Global instance
-
+#include "BatteryUI/Property.h"
 void setupUI() {
 
     ui = BatteryUI::Setup<UI>([&] {     // The first parameter is a lambda function callback which when called

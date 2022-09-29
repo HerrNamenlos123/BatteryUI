@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BatteryUI/common.h"
-#include "BatteryUI/BasicWidget.h"
+#include "BasicWidget.h"
 
 namespace BatteryUI {
 
