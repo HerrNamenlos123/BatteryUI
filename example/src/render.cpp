@@ -15,7 +15,7 @@ void setupUI() {
     //ui->imguiStyle.framePadding = { 0, 0 };
     //ui->imguiStyle.windowPadding = { 0, 0 };
 
-    ui->imguiColors.borderColor = { 255, 0, 0, 255 };
+    //ui->imguiColors.borderColor = { 255, 0, 0, 255 };
     //ui->imguiStyle.itemSpacing = { 0, 0 };
 }
 

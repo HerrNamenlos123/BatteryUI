@@ -4,7 +4,6 @@
 #include <functional>
 
 #include "BatteryUI/common.h"
-#include "BatteryUI/serialize.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/Widgets/BasicWidget.h"
 

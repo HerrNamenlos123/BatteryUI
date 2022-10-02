@@ -2,7 +2,6 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/FileWatcher.h"
-#include "BatteryUI/serialize.h"
 #include "BatteryUI/Property.h"
 
 namespace BatteryUI {
@@ -17,25 +16,11 @@ namespace BatteryUI {
 			operator ImVec4() {
 				return { r, g, b, a };
 			}
-
-			template <class Archive>
-			void serialize(Archive& ar) {
-				EXPORT_ITEM(r);
-				EXPORT_ITEM(g);
-				EXPORT_ITEM(b);
-				EXPORT_ITEM(a);
-			}
 		};
 
 		struct ColorEntry {
 			std::string identifier;
 			Color color;
-
-			template <class Archive>
-			void serialize(Archive& ar) {
-				EXPORT_ITEM(identifier);
-				EXPORT_ITEM(color);
-			}
 		};
 
 		[[nodiscard]] size_t size() const {
@@ -96,11 +81,6 @@ namespace BatteryUI {
 		}
 
 		std::vector<ColorEntry> colors;
-
-		template <class Archive>
-		void serialize(Archive& ar) {
-			EXPORT_ITEM(colors);
-		}
 	};
 
 
@@ -581,7 +561,7 @@ namespace BatteryUI {
     }
     inline void from_json(const nlohmann::json& j, Rounding& p) {
         j["amount"].get_to(p.amount);
-        auto opt = magic_enum::enum_cast<RoundingType>(j["type"]);
+        auto opt = magic_enum::enum_cast<RoundingType>((std::string)j["type"]);
         if (opt.has_value()) {
             p.type = opt.value();
         }

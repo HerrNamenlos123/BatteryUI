@@ -57,12 +57,4 @@ struct UI : BatteryUI::RootUI {
         }
     }
 
-    EXPORT_STYLE() {
-        EXPORT_ITEM(defaults);  // <- This is needed by RootUI, do not forget!
-		
-        EXPORT_ITEM(window);
-        EXPORT_ITEM(load);
-        EXPORT_ITEM(save);
-    }
-
 };
