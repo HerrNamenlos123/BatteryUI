@@ -2,11 +2,13 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
-#include "BatteryUI/Widgets/Window.h"
 #include "BatteryUI/RedrawNotifier.h"
 
+#include "BatteryUI/Widgets/Window.h"
 #include "BatteryUI/Widgets/Button.h"
 #include "BatteryUI/Widgets/Dropdown.h"
+#include "BatteryUI/Widgets/HorizontalGrid.h"
+#include "BatteryUI/Widgets/VerticalGrid.h"
 
 #define HOTRELOAD_UPDATE_INTERVAL_MS 1000
 
@@ -19,6 +21,9 @@ namespace BatteryUI {
 		
 		ButtonStyle button;
 		DropdownStyle dropdown;
+        ChildStyle child;
+        HorizontalGridStyle horizontalGrid;
+        VerticalGridStyle verticalGrid;
 
 		void push() {       // The Widgets' default styles are not pushed here
 			imguiStyle.push();
@@ -39,12 +44,23 @@ namespace BatteryUI {
 
 			Dropdown::Presets::load();
 			dropdown = Dropdown::Presets::Modern;
+
+            Child::Presets::load();
+            child = Child::Presets::Thin;
+
+            HorizontalGrid::Presets::load();
+            horizontalGrid = HorizontalGrid::Presets::Framed;
+
+            VerticalGrid::Presets::load();
+            verticalGrid = VerticalGrid::Presets::Framed;
 		}
 	};
 	
 	class RootUI {
 	public:
 		inline static DefaultStyles defaults;
+        ImGuiStyle imguiStyle;
+        ImGuiColors imguiColors;
 
 		explicit RootUI(const std::string& styleSheet) : watcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
 			this->styleSheet = styleSheet;
@@ -105,17 +121,27 @@ namespace BatteryUI {
 			file.close();
 		}
 
-		void drawStyleManagerWindow() {
-			window([&] {
-				ImGui::Text("Hello worlds");
-				if (ImGui::Button("Save##lol")) {
-					saveStyleSheet();
-				}
-				if (ImGui::Button("Load##lol")) {
-					loadStyleSheet();
-				}
-			});
-		}
+        void draw(const std::function<void(void)>& callback) {
+            imguiStyle.push();
+            imguiColors.push();
+
+            callback();
+
+            imguiColors.pop();
+            imguiStyle.pop();
+        }
+
+		//void drawStyleManagerWindow() {
+		//	window([&] {
+		//		ImGui::Text("Hello worlds");
+		//		if (ImGui::Button("Save##lol")) {
+		//			saveStyleSheet();
+		//		}
+		//		if (ImGui::Button("Load##lol")) {
+		//			loadStyleSheet();
+		//		}
+		//	});
+		//}
 
 		//virtual void archive(cereal::JSONInputArchive& ar) = 0;
 		//virtual void archive(cereal::JSONOutputArchive& ar) = 0;

@@ -7,7 +7,6 @@ namespace BatteryUI {
 
     struct ButtonStyle {
         Property<ImVec2> size;
-        SameLine sameLine;
 
         Rounding rounding;
         ImGuiPropVec4<ImGuiCol_Button> color;
@@ -28,7 +27,7 @@ namespace BatteryUI {
             rounding.pop();
         }
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ButtonStyle, size, sameLine, rounding, color, colorHovered, colorActive);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ButtonStyle, size, rounding, color, colorHovered, colorActive);
     };
 	
 	class Button : public BasicWidget {
@@ -39,12 +38,30 @@ namespace BatteryUI {
 		bool hovered = false;
 
         ButtonStyle style;
+        bool sameline = false;
 
 		Button() : BasicWidget("Button") {}
 		explicit Button(const std::string& name) : BasicWidget(name) {}
 
-		void operator()() {
-			draw();
+		void operator()(const std::function<void(void)>& callback = nullptr) override {
+
+            UI_PROPERTY_PRIORITY(ImVec2, size, ImVec2(0, 0), Internal::GetButtonDefaultStyle()->size, style.size);
+
+            if (sameline)
+                ImGui::SameLine();
+
+            Internal::GetButtonDefaultStyle()->push();
+            style.push();
+
+            clicked = ImGui::Button(getIdentifier().c_str(), size);
+            held = ImGui::IsItemActive();
+            hovered = ImGui::IsItemHovered();
+
+            if (callback && clicked)
+                callback();
+
+            style.pop();
+            Internal::GetButtonDefaultStyle()->pop();
 		}
 
 		struct Presets {
@@ -64,28 +81,7 @@ namespace BatteryUI {
 			}
 		};
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Button, style);
-
-	private:
-		void draw();
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Button, name, style, sameline);
 	};
-
-    inline void Button::draw() {
-		Internal::GetButtonDefaults()->push();
-        style.push();
-
-		ImVec2 _size = { 0, 0 };                        // ImGui default is the lowest priority
-		Internal::GetButtonDefaults()->size.get(_size);   // Then the global default
-		style.size.get(_size);                            // And then the button itself
-
-        style.sameLine();
-
-		clicked = ImGui::Button(getIdentifier().c_str(), _size);
-		held = ImGui::IsItemActive();
-		hovered = ImGui::IsItemHovered();
-
-        style.pop();
-		Internal::GetButtonDefaults()->pop();
-	}
 	
 }

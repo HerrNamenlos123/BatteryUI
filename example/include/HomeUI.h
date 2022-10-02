@@ -18,6 +18,14 @@ struct UI : BatteryUI::RootUI {
     BatteryUI::Button load;
     BatteryUI::Dropdown drop1;
     BatteryUI::Dropdown drop2;
+    BatteryUI::HorizontalGrid grid1 = {
+            new BatteryUI::VerticalGrid({
+                { new BatteryUI::Button("Button1"), "80px"},
+                { new BatteryUI::Button("Button2"), "1"},
+                { new BatteryUI::Button("Button3"), "80px"}
+            }),
+            new BatteryUI::Button("Button4"),
+        };
 
     UI() : BatteryUI::RootUI(STYLESHEET) {
         loadFonts();

@@ -11,8 +11,12 @@ void setupUI() {
         glfwPostEmptyEvent();                               // tell you to re-render the screen (for example when a loading bar is
     });                                                     // visible. Can be ignored if framerate is always high. Any additional
                                                             // parameters are forwarded to your UI class constructor
+    //ui->imguiStyle.cellPadding = { 0, 0 };
+    //ui->imguiStyle.framePadding = { 0, 0 };
+    //ui->imguiStyle.windowPadding = { 0, 0 };
 
 
+    //ui->imguiStyle.itemSpacing = { 0, 0 };
 }
 
 void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitches when live reloading fonts
@@ -30,25 +34,26 @@ void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitch
 void renderUI() {
     BatteryUI::NewFrame();
 
-    ui->window([&] {
-        ImGui::Text("Hello");
+    ui->draw([&] {
+        ui->window([&] {
+            ImGui::Text("Hello");
 
-        ui->save();
-        ui->load();
+            ui->save();
+            ui->grid1();
+            ui->load();
 
-		
+            ui->drop1.items.clear();
+            ui->drop1.items.emplace_back("fdsakl");
+            ui->drop1.items.emplace_back("f3fewfa");
+            ui->drop1.items.emplace_back("3094zt083");
+            ui->drop1.items.emplace_back("foiewmfi0w");
 
-        ui->drop1.items.clear();
-        ui->drop1.items.emplace_back("fdsakl");
-        ui->drop1.items.emplace_back("f3fewfa");
-        ui->drop1.items.emplace_back("3094zt083");
-        ui->drop1.items.emplace_back("foiewmfi0w");
-        
-        ui->drop1();
-        ui->drop2();
+            ui->drop1();
+            ui->drop2();
+        });
     });
 	
-    ui->drawStyleManagerWindow();
+    //ui->drawStyleManagerWindow();
 	
     ImGui::PushFont(ui->font);
     ImGui::ShowDemoWindow();

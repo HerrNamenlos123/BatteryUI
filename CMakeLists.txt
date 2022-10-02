@@ -12,9 +12,13 @@ target_include_directories(BatteryUI INTERFACE
 )
 
 set(HEADER_FILES
+        include/BatteryUI/Widgets/Child.h
+        include/BatteryUI/Widgets/Window.h
         include/BatteryUI/Widgets/Button.h
         include/BatteryUI/Widgets/Dropdown.h
         include/BatteryUI/Widgets/BasicWidget.h
+        include/BatteryUI/Widgets/HorizontalGrid.h
+        include/BatteryUI/Widgets/VerticalGrid.h
         include/BatteryUI/BatteryUI.h
         include/BatteryUI/common.h
         include/BatteryUI/exception.h
@@ -28,7 +32,6 @@ set(HEADER_FILES
         include/BatteryUI/RedrawNotifier.h
         include/BatteryUI/RootUI.h
         include/BatteryUI/serialize.h
-        include/BatteryUI/Style.h
-        include/BatteryUI/Widgets/Window.h)
+        include/BatteryUI/Style.h)
 
 target_sources(BatteryUI INTERFACE ${HEADER_FILES})

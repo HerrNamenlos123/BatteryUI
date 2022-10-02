@@ -586,7 +586,7 @@ namespace BatteryUI {
             p.type = opt.value();
         }
     }
-
+/*
     class SameLine {
     public:
         SameLine() = default;
@@ -613,6 +613,91 @@ namespace BatteryUI {
 
     private:
         bool sameline = false;
+    };*/
+
+    class Measurement {
+    public:
+
+        enum class Unit {
+            NONE,
+            UNITLESS,
+            PIXEL,
+            PERCENT
+        };
+
+        Measurement() {}
+        Measurement(const char* value) {
+            this->operator=(value);
+        }
+        Measurement(const std::string& value) {
+            this->operator=(value);
+        }
+        Measurement(float value, Unit unit) {
+            this->value_ = value;
+            this->unit_ = unit;
+        }
+
+        // This function takes a value_ string such as '0' or '47px' or '80%'
+        Measurement& operator=(const char* value) {
+            this->operator=(std::string(value));
+            return *this;
+        }
+        Measurement& operator=(const std::string& value) {
+            float tempValue = 0.f;
+            Unit tempUnit = Unit::NONE;
+
+            if (value.empty())                                              // Is empty
+                throw UI_EXCEPTION("Cannot load value: Value string is empty!");
+
+            if (std::string("0123456789.").find(value[0]) == std::string::npos)       // Doesn't start with a digit
+                throw UI_EXCEPTION("Cannot load value '%s': Expected a digit!", value.c_str());
+
+            size_t numberDigits = value.find_first_not_of("0123456789.");
+            if (numberDigits == std::string::npos) numberDigits = value.length();            // It must consist only of digits
+
+            try {
+                tempValue = std::stof(value.substr(0, numberDigits));
+            }
+            catch (...) {
+                throw UI_EXCEPTION("Cannot load value '%s': Parsing as float failed", value.c_str());
+            }
+
+            bool digitsOnly = numberDigits == value.length();
+            if (digitsOnly) {
+                tempUnit = Unit::UNITLESS;
+            }
+            else {
+                std::string unit = value.substr(numberDigits, value.length() - numberDigits);
+                if (unit == "px") tempUnit = Unit::PIXEL;
+                else if (unit == "%") tempUnit = Unit::PERCENT;
+                else throw UI_EXCEPTION("Cannot load value '%s': Unit is not known!", value.c_str());
+            }
+
+            this->value_ = tempValue;
+            this->unit_ = tempUnit;
+
+            return *this;
+        }
+
+        float getValue() const {
+            return value_;
+        }
+
+        Unit getUnit() const {
+            return unit_;
+        }
+
+        bool operator==(const Measurement& other) {
+            return (this->unit_ == other.unit_) && (this->value_ == other.value_);
+        }
+
+        bool operator!=(const Measurement& other) {
+            return !this->operator==(other);
+        }
+
+    private:
+        float value_ = 0.f;
+        Unit unit_ = Unit::NONE;
     };
 
 }

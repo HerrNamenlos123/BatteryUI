@@ -19,12 +19,24 @@ namespace BatteryUI {
 
 
 		
-        inline ButtonStyle* GetButtonDefaults() {
+        inline ButtonStyle* GetButtonDefaultStyle() {
             return &RootUI::defaults.button;
         }
 
-        inline DropdownStyle* GetDropdownDefaults() {
+        inline DropdownStyle* GetDropdownDefaultStyle() {
             return &RootUI::defaults.dropdown;
+        }
+
+        inline ChildStyle* GetChildDefaultStyle() {
+            return &RootUI::defaults.child;
+        }
+
+        inline HorizontalGridStyle* GetHorizontalGridDefaultStyle() {
+            return &RootUI::defaults.horizontalGrid;
+        }
+
+        inline VerticalGridStyle* GetVerticalGridDefaultStyle() {
+            return &RootUI::defaults.verticalGrid;
         }
 
 	}

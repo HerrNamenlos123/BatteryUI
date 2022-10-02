@@ -3,6 +3,8 @@
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/InternalDecl.h"
+#include "BatteryUI/Property.h"
+#include "BatteryUI/Style.h"
 
 namespace BatteryUI {
 
@@ -19,12 +21,15 @@ namespace BatteryUI {
         explicit BasicWidget(const std::string& name_) : name(name_) {
             newID();
         }
+        virtual ~BasicWidget() = default;
 
-		BasicWidget(BasicWidget const& other) = delete;
+		BasicWidget(BasicWidget const& other) = delete;     // Copying is NOT allowed due to the unique ID
 		void operator=(BasicWidget const& other) = delete;
 
 		BasicWidget(BasicWidget&& other) = default;	// Moving is allowed as the other object is then invalid
 		BasicWidget& operator=(BasicWidget&& other) = default;
+
+        virtual void operator()(const std::function<void(void)>& callback = nullptr) = 0;
 
 	protected:
 		[[nodiscard]] std::string getIdentifier() const {

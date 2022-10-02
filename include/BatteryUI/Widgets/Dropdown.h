@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BatteryUI/common.h"
-#include "BasicWidget.h"
+#include "BatteryUI/Widgets/BasicWidget.h"
 
 namespace BatteryUI {
 
@@ -23,7 +23,7 @@ namespace BatteryUI {
 		Dropdown() : BasicWidget("Dropdown") {}
 		explicit Dropdown(const std::string& name) : BasicWidget(name) {}
 
-		void operator()() {
+		void operator()(const std::function<void(void)>& callback = nullptr) {
 			draw();
 		}
 

@@ -2,6 +2,12 @@
 
 #include "BatteryUI/common.h"
 
+// Default is the lowest priority, then be the global default, then the per-item value
+#define UI_PROPERTY_PRIORITY(type, var, default_, prio1, prio2) \
+    type var = default_;  \
+    prio1.get_to(var); \
+    prio2.get_to(var);
+
 namespace BatteryUI {
 
 	enum class PropertyType {
@@ -28,7 +34,7 @@ namespace BatteryUI {
             return *this;
 		}
 
-        virtual void get(T& v) {
+        virtual void get_to(T& v) {
 			if (has_value()) {
 				v = value;
 			}
@@ -74,8 +80,8 @@ namespace BatteryUI {
             return *this;
         }
 
-        void get(float& v) override {
-            Property::get(v);
+        void get_to(float& v) override {
+            Property::get_to(v);
         }
 
         void push() {
@@ -102,8 +108,8 @@ namespace BatteryUI {
             return *this;
         }
 
-        void get(ImVec2& v) override {
-            Property::get(v);
+        void get_to(ImVec2& v) override {
+            Property::get_to(v);
         }
 
         void push() {
@@ -130,8 +136,8 @@ namespace BatteryUI {
             return *this;
         }
 
-        void get(ImVec4& v) override {
-            Property::get(v);
+        void get_to(ImVec4& v) override {
+            Property::get_to(v);
         }
 
         void push() {
