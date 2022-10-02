@@ -2,7 +2,7 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Widgets/BasicWidget.h"
-#include "BatteryUI/Widgets/Child.h"
+#include "BatteryUI/Widgets/Container.h"
 
 namespace BatteryUI {
 
@@ -17,7 +17,7 @@ namespace BatteryUI {
     class VerticalGrid : public BasicWidget {
     public:
         struct Widget {
-            std::shared_ptr<BasicWidget> widget;
+            std::function<void(void)> callback;
             Measurement rowHeight;
         };
 
@@ -27,30 +27,28 @@ namespace BatteryUI {
 
         VerticalGrid() : BasicWidget("VerticalGrid") {}
         VerticalGrid(const std::string& name) : BasicWidget(name) {}
-        VerticalGrid(std::initializer_list<BasicWidget*> elements) : BasicWidget("VerticalGrid") {
-            for (auto element : elements) {
-                this->elements.emplace_back(Widget{ std::shared_ptr<BasicWidget>(element), Measurement("1") });
+        VerticalGrid(std::initializer_list<std::function<void(void)>> elements) : BasicWidget("VerticalGrid") {
+            for (auto& element : elements) {
+                this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        VerticalGrid(std::initializer_list<std::pair<BasicWidget*, std::string>> elements) : BasicWidget("VerticalGrid") {
+        VerticalGrid(std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements) : BasicWidget("VerticalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        std::shared_ptr<BasicWidget>(element.first),
-                        Measurement(element.second)
+                        element.first,Measurement(element.second)
                 });
             }
         }
-        VerticalGrid(const std::string& name, std::initializer_list<BasicWidget*> elements) : BasicWidget(name) {
+        VerticalGrid(const std::string& name, std::initializer_list<std::function<void(void)>> elements) : BasicWidget(name) {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ std::shared_ptr<BasicWidget>(element), Measurement("1") });
+                this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        VerticalGrid(const std::string& name, std::initializer_list<std::pair<BasicWidget*, std::string>> elements)
+        VerticalGrid(const std::string& name, std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements)
                 : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        std::shared_ptr<BasicWidget>(element.first),
-                        Measurement(element.second)
+                        element.first,Measurement(element.second)
                 });
             }
         }
@@ -60,20 +58,20 @@ namespace BatteryUI {
             ImGui::PushID(getIdentifier().c_str());
 
             for (size_t i = 0; i < elements.size(); i++) {
-                if (elements[i].widget) {
-                    float _width = -1.f;
-                    style.width.get_to(_width);
+                float _width = -1.f;
+                style.width.get_to(_width);
 
-                    UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetVerticalGridDefaultStyle()->borders, style.borders);
+                UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetVerticalGridDefaultStyle()->borders, style.borders);
 
-                    child.style.border = borders;
-                    child.style.size = { _width, heights[i] };
-                    ImGui::PushID(i);
-                    child([&] {
-                        elements[i].widget->operator()();      // Call each widget
-                    });
-                    ImGui::PopID();
-                }
+                child.style.border = borders;
+                child.style.size = { _width, heights[i] };
+                ImGui::PushID(i);
+                child([&] {
+                    if (elements[i].callback) {
+                        elements[i].callback();      // Call each widget
+                    }
+                });
+                ImGui::PopID();
             }
             ImGui::PopID();
         }
@@ -107,7 +105,7 @@ namespace BatteryUI {
             float absSum = 0;
             for (size_t i = 0; i < num; i++) {
                 if (elements[i].rowHeight.getUnit() == Measurement::Unit::PIXEL) {
-                    heights[i] = elements[i].rowHeight.getValue() - ImGui::GetStyle().ItemSpacing.y;
+                    heights[i] = elements[i].rowHeight.getValue();// - ImGui::GetStyle().ItemSpacing.y;
                     absSum += elements[i].rowHeight.getValue();
                 }
             }
@@ -123,7 +121,7 @@ namespace BatteryUI {
             for (size_t i = 0; i < num; i++) {
                 if (elements[i].rowHeight.getUnit() == Measurement::Unit::PERCENT) {
                     float proportion = std::clamp(elements[i].rowHeight.getValue() / 100.f, 0.f, 1.f);
-                    heights[i] = available * proportion - ImGui::GetStyle().ItemSpacing.y;
+                    heights[i] = available * proportion;//- ImGui::GetStyle().ItemSpacing.y;
                     relSum += available * proportion;
                 }
             }
@@ -146,14 +144,14 @@ namespace BatteryUI {
                 if (elements[i].rowHeight.getUnit() == Measurement::Unit::UNITLESS) {
                     if (ulSum != 0) {
                         float proportion = elements[i].rowHeight.getValue() / ulSum;
-                        heights[i] = remaining * proportion - ImGui::GetStyle().ItemSpacing.y;
+                        heights[i] = remaining * proportion;// - ImGui::GetStyle().ItemSpacing.y;
                     }
                 }
             }
         }
 
     private:
-        Child child;
+        Container child;
         std::vector<float> heights;
     };
 

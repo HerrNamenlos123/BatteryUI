@@ -73,7 +73,7 @@ namespace BatteryUI {
                 // No overrides
 
 				Modern = ButtonStyle();
-                Modern.size = { 160, 40 };
+                Modern.size = { -1, 40 };
 				Modern.color = ImVec4(0, 0.6, 0.9, 0.84);
 				Modern.colorHovered = ImVec4(0.1, 0.7, 1.0, 0.84);
 				Modern.colorActive = ImVec4(0, 0.5, 0.8, 0.84);

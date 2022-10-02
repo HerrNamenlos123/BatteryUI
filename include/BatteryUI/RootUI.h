@@ -21,7 +21,7 @@ namespace BatteryUI {
 		
 		ButtonStyle button;
 		DropdownStyle dropdown;
-        ChildStyle child;
+        ContainerStyle container;
         HorizontalGridStyle horizontalGrid;
         VerticalGridStyle verticalGrid;
 
@@ -45,14 +45,14 @@ namespace BatteryUI {
 			Dropdown::Presets::load();
 			dropdown = Dropdown::Presets::Modern;
 
-            Child::Presets::load();
-            child = Child::Presets::Thin;
+            Container::Presets::load();
+            container = Container::Presets::Thin;
 
             HorizontalGrid::Presets::load();
-            horizontalGrid = HorizontalGrid::Presets::Framed;
+            horizontalGrid = HorizontalGrid::Presets::Hidden;
 
             VerticalGrid::Presets::load();
-            verticalGrid = VerticalGrid::Presets::Framed;
+            verticalGrid = VerticalGrid::Presets::Hidden;
 		}
 	};
 	

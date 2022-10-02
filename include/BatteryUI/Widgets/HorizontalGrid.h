@@ -2,7 +2,7 @@
 
 #include "BatteryUI/common.h"
 #include "BatteryUI/Widgets/BasicWidget.h"
-#include "BatteryUI/Widgets/Child.h"
+#include "BatteryUI/Widgets/Container.h"
 
 namespace BatteryUI {
 
@@ -17,7 +17,7 @@ namespace BatteryUI {
     class HorizontalGrid : public BasicWidget {
     public:
         struct Widget {
-            std::shared_ptr<BasicWidget> widget;
+            std::function<void(void)> callback;
             Measurement columnWidth;
         };
 
@@ -27,66 +27,63 @@ namespace BatteryUI {
 
         HorizontalGrid() : BasicWidget("HorizontalGrid") {}
         HorizontalGrid(const std::string& name) : BasicWidget(name) {}
-        HorizontalGrid(std::initializer_list<BasicWidget*> elements) : BasicWidget("HorizontalGrid") {
-            for (auto element : elements) {
-                this->elements.emplace_back(Widget{ std::shared_ptr<BasicWidget>(element), Measurement("1") });
+        HorizontalGrid(std::initializer_list<std::function<void(void)>> elements) : BasicWidget("HorizontalGrid") {
+            for (auto& element : elements) {
+                this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        HorizontalGrid(std::initializer_list<std::pair<BasicWidget*, std::string>> elements) : BasicWidget("HorizontalGrid") {
+        HorizontalGrid(std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements) : BasicWidget("HorizontalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                    std::shared_ptr<BasicWidget>(element.first),
-                    Measurement(element.second)
+                    element.first,Measurement(element.second)
                 });
             }
         }
-        HorizontalGrid(const std::string& name, std::initializer_list<BasicWidget*> elements) : BasicWidget(name) {
+        HorizontalGrid(const std::string& name, std::initializer_list<std::function<void(void)>> elements) : BasicWidget(name) {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ std::shared_ptr<BasicWidget>(element), Measurement("1") });
+                this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        HorizontalGrid(const std::string& name, std::initializer_list<std::pair<BasicWidget*, std::string>> elements)
+        HorizontalGrid(const std::string& name, std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements)
          : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        std::shared_ptr<BasicWidget>(element.first),
-                        Measurement(element.second)
+                        element.first,Measurement(element.second)
                 });
             }
         }
 
-        void operator()(const std::function<void(void)>& callback) override {}
-
-        void operator()(const std::function<void(size_t)>& callback) {
+        void operator()(const std::function<void(void)>& callback = nullptr) override {
             calculateWidths();
             ImGui::PushID(getIdentifier().c_str());
+            //ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
             child.sameline = false;
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
             for (size_t i = 0; i < elements.size(); i++) {
-                if (elements[i].widget) {
-                    float _height = -1.f;
-                    style.height.get_to(_height);
+                float _height = -1.f;
+                style.height.get_to(_height);
 
-                    UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetHorizontalGridDefaultStyle()->borders, style.borders);
+                UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetHorizontalGridDefaultStyle()->borders, style.borders);
 
-                    child.style.border = borders;
-                    child.style.size = { widths[i], _height };
+                child.style.border = borders;
+                child.style.size = { widths[i], _height };
 
-                    if (sameline)
-                        ImGui::SameLine();
+                if (sameline)
+                    ImGui::SameLine();
 
-                    ImGui::PushID(i);
-                    child([&] {
-                        elements[i].widget->operator()();      // Call each widget
-                    });
-                    ImGui::PopID();
-                    child.sameline = true;
-                }
+                ImGui::PushID(i);
+                //ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+                child([&] {
+                    if (elements[i].callback) {
+                        elements[i].callback();      // Call each widget
+                    }
+                });
+                //ImGui::PopStyleVar();
+                ImGui::PopID();
+                child.sameline = true;
             }
-            ImGui::PopStyleVar();
+            //ImGui::PopStyleVar();
             ImGui::PopID();
-            ImGui::Dummy({ 0, 0 });
         }
 
         struct Presets {
@@ -118,7 +115,7 @@ namespace BatteryUI {
             float absSum = 0;
             for (size_t i = 0; i < num; i++) {
                 if (elements[i].columnWidth.getUnit() == Measurement::Unit::PIXEL) {
-                    widths[i] = elements[i].columnWidth.getValue() - ImGui::GetStyle().ItemSpacing.x;
+                    widths[i] = elements[i].columnWidth.getValue();// - ImGui::GetStyle().ItemSpacing.x;
                     absSum += elements[i].columnWidth.getValue();
                 }
             }
@@ -134,7 +131,7 @@ namespace BatteryUI {
             for (size_t i = 0; i < num; i++) {
                 if (elements[i].columnWidth.getUnit() == Measurement::Unit::PERCENT) {
                     float proportion = std::clamp(elements[i].columnWidth.getValue() / 100.f, 0.f, 1.f);
-                    widths[i] = available * proportion - ImGui::GetStyle().ItemSpacing.x;
+                    widths[i] = available * proportion;// - ImGui::GetStyle().ItemSpacing.x;
                     relSum += available * proportion;
                 }
             }
@@ -157,14 +154,14 @@ namespace BatteryUI {
                 if (elements[i].columnWidth.getUnit() == Measurement::Unit::UNITLESS) {
                     if (ulSum != 0) {
                         float proportion = elements[i].columnWidth.getValue() / ulSum;
-                        widths[i] = remaining * proportion - ImGui::GetStyle().ItemSpacing.x;
+                        widths[i] = remaining * proportion;// - ImGui::GetStyle().ItemSpacing.x;
                     }
                 }
             }
         }
 
     private:
-        Child child;
+        Container child;
         std::vector<float> widths;
     };
 

@@ -27,8 +27,8 @@ namespace BatteryUI {
             return &RootUI::defaults.dropdown;
         }
 
-        inline ChildStyle* GetChildDefaultStyle() {
-            return &RootUI::defaults.child;
+        inline ContainerStyle* GetChildDefaultStyle() {
+            return &RootUI::defaults.container;
         }
 
         inline HorizontalGridStyle* GetHorizontalGridDefaultStyle() {

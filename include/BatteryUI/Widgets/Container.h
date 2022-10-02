@@ -5,7 +5,7 @@
 
 namespace BatteryUI {
 
-    struct ChildStyle {
+    struct ContainerStyle {
         Property<ImVec2> size;
         Property<bool> border;
 
@@ -19,20 +19,22 @@ namespace BatteryUI {
             padding.pop();
         }
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ChildStyle, size, border, padding);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ContainerStyle, size, border, padding);
     };
 
-    class Child : public BasicWidget {
+    class Container : public BasicWidget {
     public:
 
-        ChildStyle style;
+        ContainerStyle style;
         bool sameline = false;
         ImGuiWindowFlags_ flags = ImGuiWindowFlags_None;
 
-        Child() : BasicWidget("Child") {}
-        Child(const std::string& name) : BasicWidget(name) {}
+        Container() : BasicWidget("Container") {}
+        Container(const std::string& name) : BasicWidget(name) {}
 
         void operator()(const std::function<void(void)>& callback) override {
+            ImVec2 spacing = ImGui::GetStyle().ItemSpacing;
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
             UI_PROPERTY_PRIORITY(ImVec2, size, ImVec2(0, 0), Internal::GetChildDefaultStyle()->size, style.size);
             UI_PROPERTY_PRIORITY(bool, border, false, Internal::GetChildDefaultStyle()->border, style.border);
@@ -44,28 +46,32 @@ namespace BatteryUI {
             style.push();
             ImGui::BeginChild(getIdentifier().c_str(), size, border, flags);
 
-            if (callback)
+            if (callback) {
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, spacing);
                 callback();
+                ImGui::PopStyleVar();
+            }
 
             ImGui::EndChild();
             style.pop();
             Internal::GetChildDefaultStyle()->pop();
+            ImGui::PopStyleVar();
         }
 
         struct Presets {
-            inline static struct ChildStyle None;			// No special override
-            inline static struct ChildStyle Thin; 		    // No padding
+            inline static struct ContainerStyle None;			// No special override
+            inline static struct ContainerStyle Thin; 		    // No padding
 
             inline static void load() {
-                None = ChildStyle();
+                None = ContainerStyle();
                 // No overrides
 
-                Thin = ChildStyle();
+                Thin = ContainerStyle();
                 Thin.padding = { 0, 0 };
             }
         };
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Child, name, style, sameline, flags);
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Container, name, style, sameline, flags);
     };
 
 }

@@ -18,13 +18,16 @@ struct UI : BatteryUI::RootUI {
     BatteryUI::Button load;
     BatteryUI::Dropdown drop1;
     BatteryUI::Dropdown drop2;
+
+    BatteryUI::Button button;
+
+    BatteryUI::VerticalGrid grid2 = {
+            { [&] { button(); button(); }, "1"},
+            { [&] { button(); button(); }, "1"},
+        };
     BatteryUI::HorizontalGrid grid1 = {
-            new BatteryUI::VerticalGrid({
-                { new BatteryUI::Button("Button1"), "80px"},
-                { new BatteryUI::Button("Button2"), "1"},
-                { new BatteryUI::Button("Button3"), "80px"}
-            }),
-            new BatteryUI::Button("Button4"),
+            { [&] { grid2(); }, "1"},
+            { [&] { grid2(); }, "1"},
         };
 
     UI() : BatteryUI::RootUI(STYLESHEET) {

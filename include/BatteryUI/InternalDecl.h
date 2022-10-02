@@ -6,7 +6,7 @@ namespace BatteryUI {
 
 	struct ButtonStyle;
 	struct DropdownStyle;
-	struct ChildStyle;
+	struct ContainerStyle;
 	struct HorizontalGridStyle;
 	struct VerticalGridStyle;
 
@@ -19,7 +19,7 @@ namespace BatteryUI {
 		
 		inline ButtonStyle* GetButtonDefaultStyle();
 		inline DropdownStyle* GetDropdownDefaultStyle();
-        inline ChildStyle* GetChildDefaultStyle();
+        inline ContainerStyle* GetChildDefaultStyle();
         inline HorizontalGridStyle* GetHorizontalGridDefaultStyle();
         inline VerticalGridStyle* GetVerticalGridDefaultStyle();
 
