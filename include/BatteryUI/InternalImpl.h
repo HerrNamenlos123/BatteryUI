@@ -8,35 +8,25 @@
 
 namespace BatteryUI {
 	namespace Internal {
-		
-        inline void ApplyColorScheme() {
-            //RootUI::defaults.colorScheme.apply();
-        }
-		
-        inline void LoadColorScheme() {
-            //RootUI::defaults.colorScheme.load();
-        }
 
-
-		
         inline ButtonStyle* GetButtonDefaultStyle() {
-            return &RootUI::defaults.button;
+            return &RootUI::defaultStyle.button;
         }
 
         inline DropdownStyle* GetDropdownDefaultStyle() {
-            return &RootUI::defaults.dropdown;
+            return &RootUI::defaultStyle.dropdown;
         }
 
         inline ContainerStyle* GetChildDefaultStyle() {
-            return &RootUI::defaults.container;
+            return &RootUI::defaultStyle.container;
         }
 
         inline HorizontalGridStyle* GetHorizontalGridDefaultStyle() {
-            return &RootUI::defaults.horizontalGrid;
+            return &RootUI::defaultStyle.horizontalGrid;
         }
 
         inline VerticalGridStyle* GetVerticalGridDefaultStyle() {
-            return &RootUI::defaults.verticalGrid;
+            return &RootUI::defaultStyle.verticalGrid;
         }
 
 	}

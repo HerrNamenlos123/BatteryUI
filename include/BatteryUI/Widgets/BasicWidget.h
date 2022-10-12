@@ -29,7 +29,7 @@ namespace BatteryUI {
 		BasicWidget(BasicWidget&& other) = default;	// Moving is allowed as the other object is then invalid
 		BasicWidget& operator=(BasicWidget&& other) = default;
 
-        virtual void operator()(const std::function<void(void)>& callback = nullptr) = 0;
+        virtual void operator()(const BatteryUI::Callback& callback = nullptr) = 0;
 
 	protected:
 		[[nodiscard]] std::string getIdentifier() const {

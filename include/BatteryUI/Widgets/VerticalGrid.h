@@ -17,7 +17,7 @@ namespace BatteryUI {
     class VerticalGrid : public BasicWidget {
     public:
         struct Widget {
-            std::function<void(void)> callback;
+            BatteryUI::Callback callback;
             Measurement rowHeight;
         };
 
@@ -27,24 +27,24 @@ namespace BatteryUI {
 
         VerticalGrid() : BasicWidget("VerticalGrid") {}
         VerticalGrid(const std::string& name) : BasicWidget(name) {}
-        VerticalGrid(std::initializer_list<std::function<void(void)>> elements) : BasicWidget("VerticalGrid") {
+        VerticalGrid(std::initializer_list<BatteryUI::Callback> elements) : BasicWidget("VerticalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        VerticalGrid(std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements) : BasicWidget("VerticalGrid") {
+        VerticalGrid(std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements) : BasicWidget("VerticalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
                         element.first,Measurement(element.second)
                 });
             }
         }
-        VerticalGrid(const std::string& name, std::initializer_list<std::function<void(void)>> elements) : BasicWidget(name) {
+        VerticalGrid(const std::string& name, std::initializer_list<BatteryUI::Callback> elements) : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        VerticalGrid(const std::string& name, std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements)
+        VerticalGrid(const std::string& name, std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements)
                 : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
@@ -53,7 +53,7 @@ namespace BatteryUI {
             }
         }
 
-        void operator()(const std::function<void(void)>& callback = nullptr) override {
+        void operator()(const BatteryUI::Callback& callback = nullptr) override {
             calculateHeights();
             ImGui::PushID(getIdentifier().c_str());
 

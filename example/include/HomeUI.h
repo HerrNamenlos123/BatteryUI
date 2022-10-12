@@ -8,12 +8,10 @@
 #define STYLESHEET "../resources/stylesheet.json"
 #define ROBOTO_FONT "../resources/roboto.medium.ttf"
 
-struct UI : BatteryUI::RootUI {
-
-    int fontSize = 18;
-    BatteryUI::Font font;
-
+class Window {
+public:
     BatteryUI::Window window;
+
     BatteryUI::Button save;
     BatteryUI::Button load;
     BatteryUI::Dropdown drop1;
@@ -24,18 +22,57 @@ struct UI : BatteryUI::RootUI {
     BatteryUI::VerticalGrid grid2 = {
             { [&] { button(); button(); }, "1"},
             { [&] { button(); button(); }, "1"},
-        };
+    };
     BatteryUI::HorizontalGrid grid1 = {
             { [&] { grid2(); }, "1"},
             { [&] { grid2(); }, "1"},
-        };
+    };
+
+    Window() {}
+
+    void operator()() {
+        window([&] {
+            ImGui::Text("Hello");
+
+            save();
+            grid1();
+            load();
+
+            //if (save.clicked) {
+            //    saveStyleSheet();
+            //}
+
+            drop1.items.clear();
+            drop1.items.emplace_back("fdsakl");
+            drop1.items.emplace_back("f3fewfa");
+            drop1.items.emplace_back("3094zt083");
+            drop1.items.emplace_back("foiewmfi0w");
+
+            drop1();
+            drop2();
+        });
+    }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Window, window, save, load, drop1, drop2, button, grid1, grid2);
+};
+
+class UI : public BatteryUI::RootUI {
+public:
+
+    int fontSize = 18;
+    BatteryUI::Font font;
+
+    Window mainWindow;
+
+    // Here you must add all widget names, otherwise they will not be part of the stylesheet. (Except fonts)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(UI, mainWindow);
 
     UI() : BatteryUI::RootUI(STYLESHEET) {
         loadFonts();
-        save.name = "Save";
-        load.name = "Load";
-        drop1.name = "Dropdown";
-        drop2.name = "Hehe";
+    }
+
+    void draw() {           // This is the main rendering function of your UI
+        mainWindow();   // Render the window and all of its children
     }
 
     void loadFonts() {
@@ -57,4 +94,11 @@ struct UI : BatteryUI::RootUI {
         }
     }
 
+    void applyJsonRootUI(const nlohmann::json& json) override {
+        from_json(json, *this);
+    }
+
+    nlohmann::json getJsonRootUI() override {
+        return *this;
+    }
 };

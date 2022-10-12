@@ -5,14 +5,12 @@
 #include "BatteryUI/RootUI.h"
 #include "BatteryUI/InternalImpl.h"
 
-#include <memory>
-
 namespace BatteryUI {
 
     inline void LoadDefaultBatteryStyle(RootUI* ui);
 
     template<typename T, typename... TArgs>
-    inline std::unique_ptr<T> Setup(std::function<void(void)> redrawRequest, TArgs... args) {
+    inline std::unique_ptr<T> Setup(const BatteryUI::Callback& redrawRequest, TArgs... args) {
         auto ui = std::make_unique<T>(args...);
         LoadDefaultBatteryStyle(ui.get());
         ui->loadStyleSheet();
@@ -22,11 +20,11 @@ namespace BatteryUI {
     }
 
     inline void NewFrame() {
-        RootUI::defaults.push();
+        RootUI::defaultStyle.push();
     }
 
     inline void EndFrame() {
-        RootUI::defaults.pop();
+        RootUI::defaultStyle.pop();
     }
 
     template<typename T>
@@ -93,7 +91,7 @@ namespace BatteryUI {
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-        ui->defaults.imguiStyle.framePadding = { 10, 10 };
+        ui->defaultStyle.imguiStyle.framePadding = {10, 10 };
     }
 
 }

@@ -43,7 +43,7 @@ namespace BatteryUI {
 		Button() : BasicWidget("Button") {}
 		explicit Button(const std::string& name) : BasicWidget(name) {}
 
-		void operator()(const std::function<void(void)>& callback = nullptr) override {
+		void operator()(const BatteryUI::Callback& callback = nullptr) override {
 
             UI_PROPERTY_PRIORITY(ImVec2, size, ImVec2(0, 0), Internal::GetButtonDefaultStyle()->size, style.size);
 

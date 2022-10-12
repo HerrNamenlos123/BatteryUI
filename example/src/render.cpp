@@ -1,10 +1,9 @@
 
-#include <stack>
 #include "HomeUI.h"
 #include "GLFW/glfw3.h"
 
 std::unique_ptr<UI> ui; // Global instance
-#include "BatteryUI/Property.h"
+
 void setupUI() {
 
     ui = BatteryUI::Setup<UI>([&] {     // The first parameter is a lambda function callback which when called
@@ -34,24 +33,7 @@ void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitch
 void renderUI() {
     BatteryUI::NewFrame();
 
-    ui->draw([&] {
-        ui->window([&] {
-            ImGui::Text("Hello");
-
-            ui->save();
-            ui->grid1();
-            ui->load();
-
-            ui->drop1.items.clear();
-            ui->drop1.items.emplace_back("fdsakl");
-            ui->drop1.items.emplace_back("f3fewfa");
-            ui->drop1.items.emplace_back("3094zt083");
-            ui->drop1.items.emplace_back("foiewmfi0w");
-
-            ui->drop1();
-            ui->drop2();
-        });
-    });
+    ui->draw();
 	
     //ui->drawStyleManagerWindow();
 	

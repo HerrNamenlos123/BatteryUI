@@ -12,10 +12,7 @@ namespace BatteryUI {
 
 	namespace Internal {
 
-		inline std::function<void(void)> redrawRequestCallback;
-
-        inline void ApplyColorScheme();
-        inline void LoadColorScheme();
+		inline BatteryUI::Callback redrawRequestCallback;
 		
 		inline ButtonStyle* GetButtonDefaultStyle();
 		inline DropdownStyle* GetDropdownDefaultStyle();

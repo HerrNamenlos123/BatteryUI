@@ -6,15 +6,21 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <functional>
 #include <filesystem>
 #include <chrono>
 #include <thread>
 #include <atomic>
 #include <map>
 
-#include "BatteryUI/magic_enum.h"
 #include "BatteryUI/json.hpp"
+#include "BatteryUI/magic_enum.h"
+#include "BatteryUI/std_function.h"
+
+namespace BatteryUI {
+    template<typename T>
+    using Function = func::function<T>;     // This is a cheap replacement for std::function to reduce compile time
+    using Callback = BatteryUI::Function<void(void)>;
+}
 
 #include "BatteryUI/exception.h"
 

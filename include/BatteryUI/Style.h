@@ -6,7 +6,7 @@
 
 namespace BatteryUI {
 
-	struct ColorScheme {
+	/*struct ColorScheme {
 
 		struct Color {
 			float r = 0, g = 0, b = 0, a = 0;
@@ -81,7 +81,7 @@ namespace BatteryUI {
 		}
 
 		std::vector<ColorEntry> colors;
-	};
+	};*/
 
 
 

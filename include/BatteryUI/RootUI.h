@@ -58,24 +58,23 @@ namespace BatteryUI {
 	
 	class RootUI {
 	public:
-		inline static DefaultStyles defaults;
-        ImGuiStyle imguiStyle;
-        ImGuiColors imguiColors;
+		inline static DefaultStyles defaultStyle;
 
-		explicit RootUI(const std::string& styleSheet) : watcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
+		explicit RootUI(const std::string& styleSheet)
+          : fileWatcher(styleSheet), redraw(HOTRELOAD_UPDATE_INTERVAL_MS) {
 			this->styleSheet = styleSheet;
-			defaults = DefaultStyles();
+            defaultStyle = DefaultStyles();
 			window.name = "Style Manager";
 		}
 
 		void updateHotreload() {
-			bool modified = watcher.update();
+			bool modified = fileWatcher.update();
 			if (modified) {
 				loadStyleSheet();
 			}
 		}
 		
-		bool loadStyleSheet() {
+		bool loadStyleSheet() {     // TODO: Prevent infinite hang-up
 			do {
 				std::ifstream file(styleSheet);
 				if (!file.is_open()) {
@@ -84,8 +83,8 @@ namespace BatteryUI {
 				}
 
 				try {
-					//cereal::JSONInputArchive ar(file);
-					//archive(ar);
+                    std::string content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+                    applyJsonRootUI(nlohmann::json::parse(content));
 				}
 				catch (const std::exception& e) {
 					file.close();
@@ -94,42 +93,33 @@ namespace BatteryUI {
 				}
 
 				file.close();
-				Internal::ApplyColorScheme();
 				return true;
 			} while (false);
 
 			saveStyleSheet();		// Default create -> The std::ifstream object must be destructed before calling this
 			return loadStyleSheet();
 		}
+
+        virtual void applyJsonRootUI(const nlohmann::json& json) = 0;
 		
 		void saveStyleSheet() {
-			Internal::LoadColorScheme();
 			std::ofstream file(styleSheet);
 			if (!file.is_open()) {
-				printf("[%s]: Failed to load style sheet: No such file or directory.\n", __FUNCTION__);
+				printf("[%s]: Failed to open style sheet for writing: No such file or directory.\n", __FUNCTION__);
 				return;
 			}
 
 			try {
-				//cereal::JSONOutputArchive ar(file);
-				//archive(ar);
+                file << getJsonRootUI().dump(4);
 			}
 			catch (const std::exception& e) {
-				printf("[%s]: Error while saving style sheet: %s\n", __FUNCTION__, e.what());
+				printf("[%s]: Error writing style sheet: %s\n", __FUNCTION__, e.what());
 			}
 
 			file.close();
 		}
 
-        void draw(const std::function<void(void)>& callback) {
-            imguiStyle.push();
-            imguiColors.push();
-
-            callback();
-
-            imguiColors.pop();
-            imguiStyle.pop();
-        }
+        virtual nlohmann::json getJsonRootUI() = 0;
 
 		//void drawStyleManagerWindow() {
 		//	window([&] {
@@ -143,12 +133,9 @@ namespace BatteryUI {
 		//	});
 		//}
 
-		//virtual void archive(cereal::JSONInputArchive& ar) = 0;
-		//virtual void archive(cereal::JSONOutputArchive& ar) = 0;
-
 	private:
 		std::string styleSheet;
-		FileWatcher watcher;
+		FileWatcher fileWatcher;
 		RedrawNotifier redraw;
 
 		Window window;

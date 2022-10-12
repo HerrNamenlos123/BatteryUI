@@ -17,7 +17,7 @@ namespace BatteryUI {
     class HorizontalGrid : public BasicWidget {
     public:
         struct Widget {
-            std::function<void(void)> callback;
+            BatteryUI::Callback callback;
             Measurement columnWidth;
         };
 
@@ -27,24 +27,24 @@ namespace BatteryUI {
 
         HorizontalGrid() : BasicWidget("HorizontalGrid") {}
         HorizontalGrid(const std::string& name) : BasicWidget(name) {}
-        HorizontalGrid(std::initializer_list<std::function<void(void)>> elements) : BasicWidget("HorizontalGrid") {
+        HorizontalGrid(std::initializer_list<BatteryUI::Callback> elements) : BasicWidget("HorizontalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        HorizontalGrid(std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements) : BasicWidget("HorizontalGrid") {
+        HorizontalGrid(std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements) : BasicWidget("HorizontalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
                     element.first,Measurement(element.second)
                 });
             }
         }
-        HorizontalGrid(const std::string& name, std::initializer_list<std::function<void(void)>> elements) : BasicWidget(name) {
+        HorizontalGrid(const std::string& name, std::initializer_list<BatteryUI::Callback> elements) : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{ element, Measurement("1") });
             }
         }
-        HorizontalGrid(const std::string& name, std::initializer_list<std::pair<std::function<void(void)>, std::string>> elements)
+        HorizontalGrid(const std::string& name, std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements)
          : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
@@ -53,7 +53,7 @@ namespace BatteryUI {
             }
         }
 
-        void operator()(const std::function<void(void)>& callback = nullptr) override {
+        void operator()(const BatteryUI::Callback& callback = nullptr) override {
             calculateWidths();
             ImGui::PushID(getIdentifier().c_str());
             //ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });

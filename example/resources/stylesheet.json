@@ -1,0 +1,93 @@
+{
+    "mainWindow": {
+        "button": {
+            "name": "Button",
+            "sameline": false,
+            "style": {
+                "color": null,
+                "colorActive": null,
+                "colorHovered": null,
+                "rounding": {
+                    "amount": null,
+                    "type": "NONE"
+                },
+                "size": null
+            }
+        },
+        "drop1": {
+            "name": "Dropdown",
+            "sameline": false,
+            "style": {
+                "color": null,
+                "colorActive": null,
+                "colorHovered": null,
+                "rounding": {
+                    "amount": null,
+                    "type": "NONE"
+                },
+                "width": null
+            }
+        },
+        "drop2": {
+            "name": "Dropdown",
+            "sameline": false,
+            "style": {
+                "color": null,
+                "colorActive": null,
+                "colorHovered": null,
+                "rounding": {
+                    "amount": null,
+                    "type": "NONE"
+                },
+                "width": null
+            }
+        },
+        "grid1": {
+            "name": "HorizontalGrid",
+            "sameline": false,
+            "style": {
+                "borders": null,
+                "height": null
+            }
+        },
+        "grid2": {
+            "name": "VerticalGrid",
+            "sameline": false,
+            "style": {
+                "borders": null,
+                "width": null
+            }
+        },
+        "load": {
+            "name": "Button",
+            "sameline": false,
+            "style": {
+                "color": null,
+                "colorActive": null,
+                "colorHovered": null,
+                "rounding": {
+                    "amount": null,
+                    "type": "NONE"
+                },
+                "size": null
+            }
+        },
+        "save": {
+            "name": "Button",
+            "sameline": false,
+            "style": {
+                "color": null,
+                "colorActive": null,
+                "colorHovered": null,
+                "rounding": {
+                    "amount": null,
+                    "type": "NONE"
+                },
+                "size": null
+            }
+        },
+        "window": {
+            "flags": 0
+        }
+    }
+}

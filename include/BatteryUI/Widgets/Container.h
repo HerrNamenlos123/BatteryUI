@@ -32,7 +32,7 @@ namespace BatteryUI {
         Container() : BasicWidget("Container") {}
         Container(const std::string& name) : BasicWidget(name) {}
 
-        void operator()(const std::function<void(void)>& callback) override {
+        void operator()(const BatteryUI::Callback& callback) override {
             ImVec2 spacing = ImGui::GetStyle().ItemSpacing;
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 

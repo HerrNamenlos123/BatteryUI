@@ -11,6 +11,8 @@ namespace BatteryUI {
         ImGuiPropVec4<ImGuiCol_Button> color;
         ImGuiPropVec4<ImGuiCol_ButtonHovered> colorHovered;
         ImGuiPropVec4<ImGuiCol_ButtonActive> colorActive;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DropdownStyle, rounding, width, color, colorHovered, colorActive);
     };
 
 	class Dropdown : public BasicWidget {
@@ -19,11 +21,12 @@ namespace BatteryUI {
 		size_t selectedItem = -1;			// The std::vector index of the selected item (-1 if invalid)
 
         DropdownStyle style;
+        bool sameline = false;
 
 		Dropdown() : BasicWidget("Dropdown") {}
 		explicit Dropdown(const std::string& name) : BasicWidget(name) {}
 
-		void operator()(const std::function<void(void)>& callback = nullptr) {
+		void operator()(const BatteryUI::Callback& callback = nullptr) {
 			draw();
 		}
 
@@ -42,6 +45,8 @@ namespace BatteryUI {
 				Modern.rounding = { RoundingType::ROUNDED, 5 };
             }
 		};
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Dropdown, name, style, sameline);
 
 	private:
 		void draw();
