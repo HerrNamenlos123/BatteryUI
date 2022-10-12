@@ -14,7 +14,6 @@ namespace BatteryUI {
         auto ui = std::make_unique<T>(args...);
         LoadDefaultBatteryStyle(ui.get());
         ui->loadStyleSheet();
-        ui->updateHotreload();
         Internal::redrawRequestCallback = redrawRequest;
         return std::move(ui);
     }
@@ -91,7 +90,7 @@ namespace BatteryUI {
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-        ui->defaultStyle.imguiStyle.framePadding = {10, 10 };
+        //ui->defaultStyle.imguiStyle.framePadding = {10, 10 };
     }
 
 }

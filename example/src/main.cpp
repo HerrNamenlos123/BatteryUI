@@ -9,7 +9,7 @@
 #include <exception>
 #include <BatteryUI/BatteryUI.h>
 
-// These three functions build up the example in render.cpp
+// These four functions build up the example in render.cpp
 void setupUI();
 void updateUI();
 void renderUI();

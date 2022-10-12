@@ -29,11 +29,21 @@ namespace BatteryUI {
             return font;
         }
 
+        void push() {
+            if (font)
+                ImGui::PushFont(font);
+        }
+
+        void pop() {
+            if (font)
+                ImGui::PopFont();
+        }
+
         Font(const Font&) = delete;
         Font& operator=(const Font&) = delete;
 
     private:
-        ImFont* font = nullptr;
+        ImFont* font = nullptr;     // Not in ownership, just a reference and thus copy-able
     };
 
     inline void ClearFontAtlas() {
@@ -61,5 +71,11 @@ namespace BatteryUI {
         if (font == nullptr) throw UI_EXCEPTION("Failed to load font!");
         return {font};
     }
+
+    struct Fonts {
+        Fonts() = default;
+
+        static void loadFonts();
+    };
 
 }

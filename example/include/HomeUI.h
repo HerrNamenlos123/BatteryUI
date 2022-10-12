@@ -1,12 +1,9 @@
 #pragma once
 
-#include "imgui.h"
-#include "backends/imgui_impl_opengl3.h"
-
-#include "BatteryUI/BatteryUI.h"    // This must be included AFTER ImGui!
+#include "Headers.h"
+#include "Fonts.h"
 
 #define STYLESHEET "../resources/stylesheet.json"
-#define ROBOTO_FONT "../resources/roboto.medium.ttf"
 
 class Window {
 public:
@@ -28,7 +25,9 @@ public:
             { [&] { grid2(); }, "1"},
     };
 
-    Window() {}
+    Window() {
+        window.name = "BatteryUI Style Manager";
+    }
 
     void operator()() {
         window([&] {
@@ -58,40 +57,24 @@ public:
 
 class UI : public BatteryUI::RootUI {
 public:
-
-    int fontSize = 18;
-    BatteryUI::Font font;
-
     Window mainWindow;
 
     // Here you must add all widget names, otherwise they will not be part of the stylesheet. (Except fonts)
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(UI, mainWindow);
 
     UI() : BatteryUI::RootUI(STYLESHEET) {
-        loadFonts();
+        Fonts::loadFonts();
     }
 
     void draw() {           // This is the main rendering function of your UI
-        mainWindow();   // Render the window and all of its children
-    }
+        Fonts::robotoMain.push();
 
-    void loadFonts() {
-        font = BatteryUI::LoadFontFromFile(ROBOTO_FONT, fontSize);
-    }
+        mainWindow();       // Render the main window and all of its children
+        drawStyleManagerWindow();
 
-    void updateFontSize() {
-        static int oldSize = 0;
+        ImGui::ShowDemoWindow();    // Default ImGui demo window
 
-        if (fontSize != oldSize) {
-            oldSize = fontSize;
-
-            BatteryUI::ClearFontAtlas();
-            loadFonts();
-            BatteryUI::BuildFontAtlas();
-            ImGui_ImplOpenGL3_CreateFontsTexture(); // <- You must call this manually for your backend, 
-                                                    // as BatteryUI does not know anything about your 
-                                                    // (maybe custom) ImGui backend
-        }
+        Fonts::robotoMain.pop();
     }
 
     void applyJsonRootUI(const nlohmann::json& json) override {

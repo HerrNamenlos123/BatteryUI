@@ -6,7 +6,12 @@
             "style": {
                 "color": null,
                 "colorActive": null,
-                "colorHovered": null,
+                "colorHovered": [
+                    255.0,
+                    0.0,
+                    0.0,
+                    255.0
+                ],
                 "rounding": {
                     "amount": null,
                     "type": "NONE"
