@@ -1,5 +1,0 @@
-{
-    "enum": "ImGuiStyleVar_FramePadding",
-    "type": "STYLEVAR",
-    "value": 10.0
-}
