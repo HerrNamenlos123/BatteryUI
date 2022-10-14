@@ -77,7 +77,9 @@ public:
         from_json(json, *this);
     }
 
-    nlohmann::json getJsonRootUI() override {
-        return *this;
+    void getJsonRootUI(nlohmann::json& json) override {
+        to_json(json, *this);
     }
+	
+    BATTERYUI_STYLESHEET_HOTRELOAD();
 };

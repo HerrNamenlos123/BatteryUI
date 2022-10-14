@@ -42,29 +42,19 @@ namespace BatteryUI {
 	public:
 		inline static DefaultStyles defaultStyle;
 
-		explicit RootUI(const std::string& styleSheet)
-          : fileWatcher(styleSheet) {
-			this->styleSheet = styleSheet;
-            defaultStyle = DefaultStyles();
+		virtual void setupHotreload() {}
+		virtual void terminateHotreload() {}
+		virtual void applyJsonRootUI(const nlohmann::json& json) = 0;
+		virtual void getJsonRootUI(nlohmann::json& json) = 0;
+
+		explicit RootUI(const std::string& styleSheet) : styleSheet(styleSheet) {
 			window.name = "Style Manager";
-
-            watcherThread = std::thread([&] {
-                while (!terminate) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(period));
-                    if (fileWatcher.update()) {
-                        loadStyleSheet();
-                        BatteryUI::RequestRedraw();
-                    }
-                }
-            });
+			setupHotreload();
 		}
-
-        ~RootUI() {
-            terminate = true;
-            watcherThread.join();
-        }
 		
 		bool loadStyleSheet() {     // TODO: Prevent infinite hang-up
+			std::cout << "Loading style sheet" << std::endl;
+			
 			do {
 				std::ifstream file(styleSheet);
 				if (!file.is_open()) {
@@ -77,22 +67,20 @@ namespace BatteryUI {
                     applyJsonRootUI(nlohmann::json::parse(content));
 				}
 				catch (const std::exception& e) {
-					file.close();
 					printf("[%s]: Error while loading style sheet: %s\n", __FUNCTION__, e.what());
 					return false;
 				}
-
-				file.close();
+				
 				return true;
 			} while (false);
 
 			saveStyleSheet();		// Default create -> The std::ifstream object must be destructed before calling this
 			return loadStyleSheet();
 		}
-
-        virtual void applyJsonRootUI(const nlohmann::json& json) = 0;
 		
 		void saveStyleSheet() {
+			std::cout << "Saving style sheet" << std::endl;
+			
 			std::ofstream file(styleSheet);
 			if (!file.is_open()) {
 				printf("[%s]: Failed to open style sheet for writing: No such file or directory.\n", __FUNCTION__);
@@ -100,42 +88,75 @@ namespace BatteryUI {
 			}
 
 			try {
-                file << getJsonRootUI().dump(4);
+				nlohmann::json json;
+				getJsonRootUI(json);
+                file << json.dump(4);
 			}
 			catch (const std::exception& e) {
 				printf("[%s]: Error writing style sheet: %s\n", __FUNCTION__, e.what());
 			}
-
-			file.close();
 		}
-
-        virtual nlohmann::json getJsonRootUI() = 0;
 
 		void drawStyleManagerWindow() {
             styleManagerWindow();
 
             if (styleManagerWindow.btnSave.clicked) {
-                std::cout << "Saving style sheet" << std::endl;
                 saveStyleSheet();
             }
             if (styleManagerWindow.btnLoad.clicked) {
-                std::cout << "Loading style sheet" << std::endl;
                 loadStyleSheet();
             }
 		}
 
-    private:
+    public:
         StyleManagerWindow styleManagerWindow;
-
-	private:
 		std::string styleSheet;
 
-        std::atomic<bool> terminate = false;
-        int64_t period = HOTRELOAD_UPDATE_INTERVAL_MS;
-        std::thread watcherThread;
-		FileWatcher fileWatcher;
-
+	private:
 		Window window;
 	};
+
+	class HotreloadHandler {
+	public:
+		HotreloadHandler(RootUI* ui, int64_t period_ms = HOTRELOAD_UPDATE_INTERVAL_MS) {
+			this->ui = ui;
+			this->period_ms = period_ms;
+			this->fileWatcher = std::make_unique<FileWatcher>(ui->styleSheet);
+			
+			watcherThread = std::thread([&] {
+				while (!terminateWatcher) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(period_ms));
+					if (fileWatcher->update()) {
+						ui->loadStyleSheet();
+						BatteryUI::RequestRedraw();
+					}
+				}
+				});
+		}
+
+		~HotreloadHandler() {
+			terminateWatcher = true;
+			watcherThread.join();
+		}
+		
+	private:
+		std::atomic<bool> terminateWatcher = false;
+		std::thread watcherThread;
+		
+		int64_t period_ms = 0;
+		std::unique_ptr<FileWatcher> fileWatcher;
+		std::string stylesheet;
+		
+		RootUI* ui = nullptr;
+	};
+
+#define BATTERYUI_STYLESHEET_HOTRELOAD(...) \
+	std::unique_ptr<BatteryUI::HotreloadHandler> __hotreload; \
+	void setupHotreload() override { \
+		__hotreload = std::make_unique<BatteryUI::HotreloadHandler>(this, ##__VA_ARGS__); \
+	} \
+	void terminateHotreload() override { \
+		__hotreload.reset(); \
+	}
 	
 }

@@ -7,14 +7,15 @@
 
 namespace BatteryUI {
 
-    inline void LoadDefaultBatteryStyle(RootUI* ui);
+    inline void LoadDefaultBatteryStyle();
 
     template<typename T, typename... TArgs>
     inline std::unique_ptr<T> Setup(const BatteryUI::Callback& redrawRequest, TArgs... args) {
-        auto ui = std::make_unique<T>(args...);
-        LoadDefaultBatteryStyle(ui.get());
-        ui->loadStyleSheet();
         Internal::redrawRequestCallback = redrawRequest;
+		
+        LoadDefaultBatteryStyle();
+		
+        auto ui = std::make_unique<T>(args...);
         return std::move(ui);
     }
 
@@ -28,8 +29,9 @@ namespace BatteryUI {
 
     template<typename T>
     inline void Shutdown(T& ui) {
-        ui->saveStyleSheet();
-        ui.reset();
+        ui->terminateHotreload();
+        ui->saveStyleSheet();       // Now save one last time manually
+        ui.reset();                 // And now destruct without calling abstract functions
     }
 
     template<typename T> 
@@ -38,7 +40,7 @@ namespace BatteryUI {
     static inline ImVec2 Lerp(const ImVec2& a, const ImVec2& b, const ImVec2& t) { return ImVec2(a.x + (b.x - a.x) * t.x, a.y + (b.y - a.y) * t.y); }
     static inline ImVec4 Lerp(const ImVec4& a, const ImVec4& b, float t) { return ImVec4(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t, a.w + (b.w - a.w) * t); }
 
-    inline void LoadDefaultBatteryStyle(RootUI* ui) {
+    inline void LoadDefaultBatteryStyle() {
         auto colors = ImGui::GetStyle().Colors;
 
         colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -89,8 +91,6 @@ namespace BatteryUI {
         colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-
-        //ui->defaultStyle.imguiStyle.framePadding = {10, 10 };
     }
 
 }
