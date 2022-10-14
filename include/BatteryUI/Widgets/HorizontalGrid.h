@@ -11,7 +11,7 @@ namespace BatteryUI {
         Property<float> height;
         Property<bool> borders;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(HorizontalGridStyle, height, borders);
+        BATTERYUI_SERIALIZE(HorizontalGridStyle, height, borders);
     };
 
     class HorizontalGrid : public BasicWidget {
@@ -103,7 +103,7 @@ namespace BatteryUI {
             }
         };
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(HorizontalGrid, name, style, sameline);
+        BATTERYUI_SERIALIZE(HorizontalGrid, name, style, sameline);
 
     private:
         void calculateWidths() {

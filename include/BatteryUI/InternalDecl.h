@@ -12,13 +12,13 @@ namespace BatteryUI {
 
 	namespace Internal {
 
-		inline BatteryUI::Callback redrawRequestCallback;
-		
-		inline ButtonStyle* GetButtonDefaultStyle();
-		inline DropdownStyle* GetDropdownDefaultStyle();
-        inline ContainerStyle* GetChildDefaultStyle();
-        inline HorizontalGridStyle* GetHorizontalGridDefaultStyle();
-        inline VerticalGridStyle* GetVerticalGridDefaultStyle();
+        inline BatteryUI::Callback redrawRequestCallback;
 
+        BATTERYUI_WIDGET_DEFAULT_STYLE_DECL();  // This defines a lot of functions [WidgetConfig.h]
 	}
+
+    inline void RequestRedraw() {
+        if (Internal::redrawRequestCallback)
+            Internal::redrawRequestCallback();
+    }
 }

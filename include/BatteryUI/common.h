@@ -12,9 +12,11 @@
 #include <atomic>
 #include <map>
 
-#include "BatteryUI/json.hpp"
-#include "BatteryUI/magic_enum.h"
-#include "BatteryUI/std_function.h"
+#include "BatteryUI/External/json.hpp"
+#include "BatteryUI/External/magic_enum.h"
+#include "BatteryUI/External/std_function.h"
+#include "BatteryUI/Widgets/WidgetConfig.h"
+#include "BatteryUI/exception.h"
 
 namespace BatteryUI {
     template<typename T>
@@ -22,7 +24,7 @@ namespace BatteryUI {
     using Callback = BatteryUI::Function<void(void)>;
 }
 
-#include "BatteryUI/exception.h"
+#define BATTERYUI_SERIALIZE NLOHMANN_DEFINE_TYPE_INTRUSIVE
 
 // JSON serialization for ImVec2
 inline void to_json(nlohmann::json& j, const ImVec2& v) {

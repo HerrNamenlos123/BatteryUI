@@ -22,7 +22,7 @@ namespace BatteryUI {
             ImGui::End();
 		}
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Window, flags);
+        BATTERYUI_SERIALIZE(Window, flags);
 	};
 	
 }

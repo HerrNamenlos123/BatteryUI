@@ -19,7 +19,7 @@ namespace BatteryUI {
             padding.pop();
         }
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ContainerStyle, size, border, padding);
+        BATTERYUI_SERIALIZE(ContainerStyle, size, border, padding);
     };
 
     class Container : public BasicWidget {
@@ -71,7 +71,7 @@ namespace BatteryUI {
             }
         };
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Container, name, style, sameline, flags);
+        BATTERYUI_SERIALIZE(Container, name, style, sameline, flags);
     };
 
 }

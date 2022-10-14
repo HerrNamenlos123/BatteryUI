@@ -3,6 +3,7 @@
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/RedrawNotifier.h"
+#include "BatteryUI/InternalDecl.h"
 
 #include "BatteryUI/Widgets/Window.h"
 #include "BatteryUI/Widgets/Button.h"
@@ -14,47 +15,7 @@
 
 namespace BatteryUI {
 
-	struct DefaultStyles {
-		
-		ImGuiStyle imguiStyle;
-		ImGuiColors imguiColors;
-		
-		ButtonStyle button;
-		DropdownStyle dropdown;
-        ContainerStyle container;
-        HorizontalGridStyle horizontalGrid;
-        VerticalGridStyle verticalGrid;
-
-		void push() {       // The Widgets' default styles are not pushed here
-			imguiStyle.push();
-			imguiColors.push();
-		}
-
-		void pop() {
-            imguiColors.pop();
-            imguiStyle.pop();
-		}
-
-		DefaultStyles() {
-            imguiStyle = ImGuiStyle();
-            imguiColors = ImGuiColors();
-
-			Button::Presets::load();
-			button = Button::Presets::Modern;
-
-			Dropdown::Presets::load();
-			dropdown = Dropdown::Presets::Modern;
-
-            Container::Presets::load();
-            container = Container::Presets::Thin;
-
-            HorizontalGrid::Presets::load();
-            horizontalGrid = HorizontalGrid::Presets::Hidden;
-
-            VerticalGrid::Presets::load();
-            verticalGrid = VerticalGrid::Presets::Hidden;
-		}
-	};
+    BATTERYUI_WIDGET_DEFAULT_STYLE_DEFINITION();    // This defines an entire class [WidgetConfig.h]
 
     class StyleManagerWindow : public BatteryUI::Window {
     public:
@@ -73,6 +34,8 @@ namespace BatteryUI {
                 btnLoad();
             });
         }
+
+        BATTERYUI_SERIALIZE(StyleManagerWindow, window, btnSave, btnLoad);
     };
 	
 	class RootUI {
@@ -90,9 +53,7 @@ namespace BatteryUI {
                     std::this_thread::sleep_for(std::chrono::milliseconds(period));
                     if (fileWatcher.update()) {
                         loadStyleSheet();
-                        if (Internal::redrawRequestCallback) {
-                            Internal::redrawRequestCallback();
-                        }
+                        BatteryUI::RequestRedraw();
                     }
                 }
             });

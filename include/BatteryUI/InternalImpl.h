@@ -9,25 +9,7 @@
 namespace BatteryUI {
 	namespace Internal {
 
-        inline ButtonStyle* GetButtonDefaultStyle() {
-            return &RootUI::defaultStyle.button;
-        }
-
-        inline DropdownStyle* GetDropdownDefaultStyle() {
-            return &RootUI::defaultStyle.dropdown;
-        }
-
-        inline ContainerStyle* GetChildDefaultStyle() {
-            return &RootUI::defaultStyle.container;
-        }
-
-        inline HorizontalGridStyle* GetHorizontalGridDefaultStyle() {
-            return &RootUI::defaultStyle.horizontalGrid;
-        }
-
-        inline VerticalGridStyle* GetVerticalGridDefaultStyle() {
-            return &RootUI::defaultStyle.verticalGrid;
-        }
+        BATTERYUI_WIDGET_DEFAULT_STYLE_IMPL();  // This defines a lot of functions [WidgetConfig.h]
 
 	}
 }

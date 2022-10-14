@@ -12,7 +12,7 @@ namespace BatteryUI {
         ImGuiPropVec4<ImGuiCol_ButtonHovered> colorHovered;
         ImGuiPropVec4<ImGuiCol_ButtonActive> colorActive;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DropdownStyle, rounding, width, color, colorHovered, colorActive);
+        BATTERYUI_SERIALIZE(DropdownStyle, rounding, width, color, colorHovered, colorActive);
     };
 
 	class Dropdown : public BasicWidget {
@@ -46,7 +46,7 @@ namespace BatteryUI {
             }
 		};
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Dropdown, name, style, sameline);
+        BATTERYUI_SERIALIZE(Dropdown, name, style, sameline);
 
 	private:
 		void draw();

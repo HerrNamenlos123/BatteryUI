@@ -27,7 +27,7 @@ namespace BatteryUI {
             rounding.pop();
         }
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ButtonStyle, size, rounding, color, colorHovered, colorActive);
+        BATTERYUI_SERIALIZE(ButtonStyle, size, rounding, color, colorHovered, colorActive);
     };
 	
 	class Button : public BasicWidget {
@@ -81,7 +81,7 @@ namespace BatteryUI {
 			}
 		};
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Button, name, style, sameline);
+        BATTERYUI_SERIALIZE(Button, name, style, sameline);
 	};
 	
 }

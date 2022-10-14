@@ -13,6 +13,9 @@ namespace BatteryUI {
 		}
 
 		bool update() {
+            if (filename.empty())
+                return false;
+
 			auto now = std::chrono::steady_clock::now();
 			auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastUpdateTime).count();
 			if (elapsed <= updateInterval) {

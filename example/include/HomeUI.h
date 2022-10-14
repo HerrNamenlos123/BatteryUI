@@ -37,10 +37,6 @@ public:
             grid1();
             load();
 
-            //if (save.clicked) {
-            //    saveStyleSheet();
-            //}
-
             drop1.items.clear();
             drop1.items.emplace_back("fdsakl");
             drop1.items.emplace_back("f3fewfa");
@@ -52,7 +48,7 @@ public:
         });
     }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Window, window, save, load, drop1, drop2, button, grid1, grid2);
+    BATTERYUI_SERIALIZE(Window, window, save, load, drop1, drop2, button, grid1, grid2);
 };
 
 class UI : public BatteryUI::RootUI {
@@ -60,7 +56,7 @@ public:
     Window mainWindow;
 
     // Here you must add all widget names, otherwise they will not be part of the stylesheet. (Except fonts)
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(UI, mainWindow);
+    BATTERYUI_SERIALIZE(UI, mainWindow);
 
     UI() : BatteryUI::RootUI(STYLESHEET) {
         Fonts::loadFonts();
