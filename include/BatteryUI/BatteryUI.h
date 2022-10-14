@@ -16,6 +16,7 @@ namespace BatteryUI {
         LoadDefaultBatteryStyle();
 		
         auto ui = std::make_unique<T>(args...);
+        ui->setupHotreload();
         return std::move(ui);
     }
 

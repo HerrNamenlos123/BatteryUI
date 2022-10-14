@@ -118,11 +118,11 @@ namespace BatteryUI {
 
 	class HotreloadHandler {
 	public:
-		HotreloadHandler(RootUI* ui, int64_t period_ms = HOTRELOAD_UPDATE_INTERVAL_MS) {
-			this->ui = ui;
-			this->period_ms = period_ms;
+		HotreloadHandler(RootUI* _ui, int64_t _period_ms = HOTRELOAD_UPDATE_INTERVAL_MS) {
+			this->ui = _ui;
+			this->period_ms = _period_ms;
 			this->fileWatcher = std::make_unique<FileWatcher>(ui->styleSheet);
-			
+
 			watcherThread = std::thread([&] {
 				while (!terminateWatcher) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(period_ms));
@@ -146,7 +146,7 @@ namespace BatteryUI {
 		int64_t period_ms = 0;
 		std::unique_ptr<FileWatcher> fileWatcher;
 		std::string stylesheet;
-		
+
 		RootUI* ui = nullptr;
 	};
 
