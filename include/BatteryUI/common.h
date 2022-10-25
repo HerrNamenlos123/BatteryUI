@@ -15,8 +15,8 @@
 #include "BatteryUI/External/json.hpp"
 #include "BatteryUI/External/magic_enum.h"
 #include "BatteryUI/External/std_function.h"
-#include "BatteryUI/Widgets/WidgetConfig.h"
 #include "BatteryUI/exception.h"
+#include "BatteryUI/utility.h"
 
 namespace BatteryUI {
     template<typename T>
@@ -46,4 +46,13 @@ inline void from_json(const nlohmann::json& j, ImVec4& v) {
 	v.y = j.at(1);
 	v.z = j.at(2);
 	v.w = j.at(3);
+}
+
+// ImVec4 operators
+inline bool operator==(const ImVec4& first, const ImVec4& second) {
+    return first.x == second.x && first.y == second.y && first.z == second.z && first.w == second.w;
+}
+
+inline ImVec4 operator/(const ImVec4& first, float value) {
+    return {first.x / value, first.y / value, first.z / value, first.w / value};
 }

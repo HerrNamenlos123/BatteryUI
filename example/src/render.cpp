@@ -12,6 +12,7 @@ void setupUI() {
                                                             // parameters are forwarded to your UI class constructor. Be aware that
                                                             // this callback may be called from any thread
 
+    BatteryUI::theme = BatteryUI::Theme_Modern();   // You can use a predefined theme or create your own
 }
 
 void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitches when live reloading fonts

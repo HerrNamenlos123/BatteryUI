@@ -6,13 +6,13 @@
 namespace BatteryUI {
 
     struct DropdownStyle {
-        Rounding rounding;
+        //Rounding rounding;
         Property<float> width;
         ImGuiPropVec4<ImGuiCol_Button> color;
         ImGuiPropVec4<ImGuiCol_ButtonHovered> colorHovered;
         ImGuiPropVec4<ImGuiCol_ButtonActive> colorActive;
 
-        BATTERYUI_SERIALIZE(DropdownStyle, rounding, width, color, colorHovered, colorActive);
+        BATTERYUI_SERIALIZE(DropdownStyle, width, color, colorHovered, colorActive);
     };
 
 	class Dropdown : public BasicWidget {
@@ -42,7 +42,7 @@ namespace BatteryUI {
 				Modern.colorHovered = ImVec4(0.1, 0.7, 1.0, 0.84);
 				Modern.colorActive = ImVec4(0, 0.5, 0.8, 0.84);
 				Modern.width = 0;
-				Modern.rounding = { RoundingType::ROUNDED, 5 };
+				//Modern.rounding = { RoundingType::ROUNDED, 5 };
             }
 		};
 

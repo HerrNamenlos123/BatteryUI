@@ -15,8 +15,6 @@
 
 namespace BatteryUI {
 
-    BATTERYUI_WIDGET_DEFAULT_STYLE_DEFINITION();    // This defines an entire class [WidgetConfig.h]
-
     class StyleManagerWindow : public BatteryUI::Window {
     public:
         BatteryUI::Window window;
@@ -40,7 +38,6 @@ namespace BatteryUI {
 	
 	class RootUI {
 	public:
-		inline static DefaultStyles defaultStyle;
 
 		virtual void setupHotreload() {}
 		virtual void terminateHotreload() {}
@@ -125,7 +122,7 @@ namespace BatteryUI {
 
 			watcherThread = std::thread([&] {
 				while (!terminateWatcher) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(period_ms));
+                    wait(std::chrono::milliseconds(period_ms));
 					if (fileWatcher->update()) {
 						ui->loadStyleSheet();
 						BatteryUI::RequestRedraw();
@@ -136,12 +133,14 @@ namespace BatteryUI {
 
 		~HotreloadHandler() {
 			terminateWatcher = true;
+            wait.terminate();
 			watcherThread.join();
 		}
 		
 	private:
 		std::atomic<bool> terminateWatcher = false;
 		std::thread watcherThread;
+        AsyncWait wait;
 		
 		int64_t period_ms = 0;
 		std::unique_ptr<FileWatcher> fileWatcher;

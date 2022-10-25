@@ -4,10 +4,13 @@
 #include "BatteryUI/Font.h"
 #include "BatteryUI/RootUI.h"
 #include "BatteryUI/InternalImpl.h"
+#include "BatteryUI/Theme.h"
 
 namespace BatteryUI {
 
     inline void LoadDefaultBatteryStyle();
+
+    inline BatteryUI::Theme theme = Theme_Modern();
 
     template<typename T, typename... TArgs>
     inline std::unique_ptr<T> Setup(const BatteryUI::Callback& redrawRequest, TArgs... args) {
@@ -21,11 +24,11 @@ namespace BatteryUI {
     }
 
     inline void NewFrame() {
-        RootUI::defaultStyle.push();
+        theme.style.push();
     }
 
     inline void EndFrame() {
-        RootUI::defaultStyle.pop();
+        theme.style.pop();
     }
 
     template<typename T>

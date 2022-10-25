@@ -6,49 +6,42 @@
 
 namespace BatteryUI {
 
-    struct VerticalGridStyle {
-
-        Property<float> width;
-        Property<bool> borders;
-
-        BATTERYUI_SERIALIZE(VerticalGridStyle, width, borders);
-    };
-
     class VerticalGrid : public BasicWidget {
     public:
         struct Widget {
             BatteryUI::Callback callback;
-            Measurement rowHeight;
+            PropertyValue rowHeight;
         };
 
         std::vector<Widget> elements;
-        VerticalGridStyle style;
+        WidgetStyle style;
+        float width = -1;
         bool sameline = false;
 
         VerticalGrid() : BasicWidget("VerticalGrid") {}
         VerticalGrid(const std::string& name) : BasicWidget(name) {}
         VerticalGrid(std::initializer_list<BatteryUI::Callback> elements) : BasicWidget("VerticalGrid") {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ element, Measurement("1") });
+                this->elements.emplace_back(Widget{element, PropertyValue("1") });
             }
         }
         VerticalGrid(std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements) : BasicWidget("VerticalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        element.first,Measurement(element.second)
+                        element.first, PropertyValue(element.second)
                 });
             }
         }
         VerticalGrid(const std::string& name, std::initializer_list<BatteryUI::Callback> elements) : BasicWidget(name) {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ element, Measurement("1") });
+                this->elements.emplace_back(Widget{element, PropertyValue("1") });
             }
         }
         VerticalGrid(const std::string& name, std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements)
                 : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        element.first,Measurement(element.second)
+                        element.first, PropertyValue(element.second)
                 });
             }
         }
@@ -57,14 +50,16 @@ namespace BatteryUI {
             calculateHeights();
             ImGui::PushID(getIdentifier().c_str());
 
+            if (sameline)
+                ImGui::SameLine();
+
             for (size_t i = 0; i < elements.size(); i++) {
-                float _width = -1.f;
-                style.width.get_to(_width);
 
-                UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetVerticalGridDefaultStyle()->borders, style.borders);
+                child.style["ContainerBorderColor"] = RetrieveProperty("GridBorderColor", ImVec4(255, 255, 255, 255) / 255);
+                child.style["ContainerBorderWidth"] = RetrieveProperty("GridBorderWidth", 0.f);
 
-                child.style.border = borders;
-                child.style.size = { _width, heights[i] };
+                child.size = { width, heights[i] };
+
                 ImGui::PushID(i);
                 child([&] {
                     if (elements[i].callback) {
@@ -76,24 +71,7 @@ namespace BatteryUI {
             ImGui::PopID();
         }
 
-        struct Presets {
-            inline static struct VerticalGridStyle None;			// No special override
-            inline static struct VerticalGridStyle Hidden; 		// No borders
-            inline static struct VerticalGridStyle Framed; 		// with borders
-
-            inline static void load() {
-                None = VerticalGridStyle();
-                // No overrides
-
-                Hidden = VerticalGridStyle();
-                Hidden.borders = false;
-
-                Framed = VerticalGridStyle();
-                Framed.borders = true;
-            }
-        };
-
-        BATTERYUI_SERIALIZE(VerticalGrid, name, style, sameline);
+        BATTERYUI_SERIALIZE(VerticalGrid, name, sameline);
 
     private:
         void calculateHeights() {
@@ -104,9 +82,9 @@ namespace BatteryUI {
             // First apply all absolute values
             float absSum = 0;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].rowHeight.getUnit() == Measurement::Unit::PIXEL) {
-                    heights[i] = elements[i].rowHeight.getValue();// - ImGui::GetStyle().ItemSpacing.y;
-                    absSum += elements[i].rowHeight.getValue();
+                if (elements[i].rowHeight.getUnit() == PropertyValue::Unit::PIXEL) {
+                    heights[i] = (float)elements[i].rowHeight;// - ImGui::GetStyle().ItemSpacing.y;
+                    absSum += (float)elements[i].rowHeight;
                 }
             }
 
@@ -119,8 +97,8 @@ namespace BatteryUI {
             // Now fill in the relative columns: relative to the page width 0.0 - 1.0
             float relSum = 0.f;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].rowHeight.getUnit() == Measurement::Unit::PERCENT) {
-                    float proportion = std::clamp(elements[i].rowHeight.getValue() / 100.f, 0.f, 1.f);
+                if (elements[i].rowHeight.getUnit() == PropertyValue::Unit::PERCENT) {
+                    float proportion = std::clamp((float)elements[i].rowHeight / 100.f, 0.f, 1.f);
                     heights[i] = available * proportion;//- ImGui::GetStyle().ItemSpacing.y;
                     relSum += available * proportion;
                 }
@@ -136,14 +114,14 @@ namespace BatteryUI {
             // Share the remaining spare among the proportions
             float ulSum = 0.f;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].rowHeight.getUnit() == Measurement::Unit::UNITLESS) {
-                    ulSum += elements[i].rowHeight.getValue();
+                if (elements[i].rowHeight.getUnit() == PropertyValue::Unit::UNITLESS) {
+                    ulSum += (float)elements[i].rowHeight;
                 }
             }
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].rowHeight.getUnit() == Measurement::Unit::UNITLESS) {
+                if (elements[i].rowHeight.getUnit() == PropertyValue::Unit::UNITLESS) {
                     if (ulSum != 0) {
-                        float proportion = elements[i].rowHeight.getValue() / ulSum;
+                        float proportion = (float)elements[i].rowHeight / ulSum;
                         heights[i] = remaining * proportion;// - ImGui::GetStyle().ItemSpacing.y;
                     }
                 }

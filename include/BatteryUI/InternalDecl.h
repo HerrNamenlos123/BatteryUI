@@ -10,15 +10,26 @@ namespace BatteryUI {
 	struct HorizontalGridStyle;
 	struct VerticalGridStyle;
 
+    class PropertyValue;
+
 	namespace Internal {
 
-        inline BatteryUI::Callback redrawRequestCallback;
+        extern inline BatteryUI::Callback redrawRequestCallback;
+        extern inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;
 
-        BATTERYUI_WIDGET_DEFAULT_STYLE_DECL();  // This defines a lot of functions [WidgetConfig.h]
 	}
 
-    inline void RequestRedraw() {
-        if (Internal::redrawRequestCallback)
-            Internal::redrawRequestCallback();
+    inline void RequestRedraw();
+    inline void PushProperty(const std::string& property, const PropertyValue& value);
+    inline void PopProperty();
+    inline std::optional<PropertyValue> RetrieveProperty(const std::string& property);
+
+    template<typename T>
+    T RetrieveProperty(const std::string& prop, T defaultValue) {
+        auto& value = RetrieveProperty(prop);
+        if (value.has_value()) {
+            return (T)value.value();
+        }
+        return defaultValue;
     }
 }

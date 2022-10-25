@@ -5,27 +5,11 @@
 
 namespace BatteryUI {
 
-    struct ContainerStyle {
-        Property<ImVec2> size;
-        Property<bool> border;
-
-        ImGuiPropVec2<ImGuiStyleVar_WindowPadding> padding;
-
-        void push() {
-            padding.push();
-        }
-
-        void pop() {
-            padding.pop();
-        }
-
-        BATTERYUI_SERIALIZE(ContainerStyle, size, border, padding);
-    };
-
     class Container : public BasicWidget {
     public:
 
-        ContainerStyle style;
+        WidgetStyle style;
+        ImVec2 size = { -1, -1 };
         bool sameline = false;
         ImGuiWindowFlags_ flags = ImGuiWindowFlags_None;
 
@@ -36,42 +20,33 @@ namespace BatteryUI {
             ImVec2 spacing = ImGui::GetStyle().ItemSpacing;
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
-            UI_PROPERTY_PRIORITY(ImVec2, size, ImVec2(0, 0), Internal::GetChildDefaultStyle()->size, style.size);
-            UI_PROPERTY_PRIORITY(bool, border, false, Internal::GetChildDefaultStyle()->border, style.border);
-
             if (sameline)
                 ImGui::SameLine();
 
-            Internal::GetChildDefaultStyle()->push();
             style.push();
-            ImGui::BeginChild(getIdentifier().c_str(), size, border, flags);
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, RetrieveProperty("ContainerBorderRadius", 0.f));
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, RetrieveProperty("ContainerBorderWidth", 0.f));
+            ImGui::PushStyleColor(ImGuiCol_Border, RetrieveProperty("ContainerBorderColor", ImVec4(255, 255, 255, 255)) / 255);
 
+            float border = RetrieveProperty("ContainerBorderWidth", 0.f);
+
+            ImGui::BeginChild(getIdentifier().c_str(), size, border > 0.f, flags);
             if (callback) {
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, spacing);
                 callback();
                 ImGui::PopStyleVar();
             }
-
             ImGui::EndChild();
+
+            ImGui::PopStyleColor();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
             style.pop();
-            Internal::GetChildDefaultStyle()->pop();
+
             ImGui::PopStyleVar();
         }
 
-        struct Presets {
-            inline static struct ContainerStyle None;			// No special override
-            inline static struct ContainerStyle Thin; 		    // No padding
-
-            inline static void load() {
-                None = ContainerStyle();
-                // No overrides
-
-                Thin = ContainerStyle();
-                Thin.padding = { 0, 0 };
-            }
-        };
-
-        BATTERYUI_SERIALIZE(Container, name, style, sameline, flags);
+        BATTERYUI_SERIALIZE(Container, name, sameline, flags);
     };
 
 }

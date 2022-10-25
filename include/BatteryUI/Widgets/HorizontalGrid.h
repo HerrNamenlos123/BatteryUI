@@ -6,49 +6,42 @@
 
 namespace BatteryUI {
 
-    struct HorizontalGridStyle {
-
-        Property<float> height;
-        Property<bool> borders;
-
-        BATTERYUI_SERIALIZE(HorizontalGridStyle, height, borders);
-    };
-
     class HorizontalGrid : public BasicWidget {
     public:
         struct Widget {
             BatteryUI::Callback callback;
-            Measurement columnWidth;
+            PropertyValue columnWidth;
         };
 
         std::vector<Widget> elements;
-        HorizontalGridStyle style;
+        WidgetStyle style;
+        float height = -1;
         bool sameline = false;
 
         HorizontalGrid() : BasicWidget("HorizontalGrid") {}
         HorizontalGrid(const std::string& name) : BasicWidget(name) {}
         HorizontalGrid(std::initializer_list<BatteryUI::Callback> elements) : BasicWidget("HorizontalGrid") {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ element, Measurement("1") });
+                this->elements.emplace_back(Widget{element, PropertyValue("1") });
             }
         }
         HorizontalGrid(std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements) : BasicWidget("HorizontalGrid") {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                    element.first,Measurement(element.second)
+                        element.first, PropertyValue(element.second)
                 });
             }
         }
         HorizontalGrid(const std::string& name, std::initializer_list<BatteryUI::Callback> elements) : BasicWidget(name) {
             for (auto& element : elements) {
-                this->elements.emplace_back(Widget{ element, Measurement("1") });
+                this->elements.emplace_back(Widget{element, PropertyValue("1") });
             }
         }
         HorizontalGrid(const std::string& name, std::initializer_list<std::pair<BatteryUI::Callback, std::string>> elements)
          : BasicWidget(name) {
             for (auto& element : elements) {
                 this->elements.emplace_back(Widget{
-                        element.first,Measurement(element.second)
+                        element.first, PropertyValue(element.second)
                 });
             }
         }
@@ -58,18 +51,16 @@ namespace BatteryUI {
             ImGui::PushID(getIdentifier().c_str());
             //ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
+            if (sameline)
+                ImGui::SameLine();
+
             child.sameline = false;
             for (size_t i = 0; i < elements.size(); i++) {
-                float _height = -1.f;
-                style.height.get_to(_height);
 
-                UI_PROPERTY_PRIORITY(bool, borders, false, Internal::GetHorizontalGridDefaultStyle()->borders, style.borders);
+                child.style["ContainerBorderColor"] = RetrieveProperty("GridBorderColor", ImVec4(255, 255, 255, 255) / 255);
+                child.style["ContainerBorderWidth"] = RetrieveProperty("GridBorderWidth", 0.f);
 
-                child.style.border = borders;
-                child.style.size = { widths[i], _height };
-
-                if (sameline)
-                    ImGui::SameLine();
+                child.size = { widths[i], height };
 
                 ImGui::PushID(i);
                 //ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -86,24 +77,7 @@ namespace BatteryUI {
             ImGui::PopID();
         }
 
-        struct Presets {
-            inline static struct HorizontalGridStyle None;			// No special override
-            inline static struct HorizontalGridStyle Hidden; 		// No borders
-            inline static struct HorizontalGridStyle Framed; 		// with borders
-
-            inline static void load() {
-                None = HorizontalGridStyle();
-                // No overrides
-
-                Hidden = HorizontalGridStyle();
-                Hidden.borders = false;
-
-                Framed = HorizontalGridStyle();
-                Framed.borders = true;
-            }
-        };
-
-        BATTERYUI_SERIALIZE(HorizontalGrid, name, style, sameline);
+        BATTERYUI_SERIALIZE(HorizontalGrid, name, sameline);
 
     private:
         void calculateWidths() {
@@ -114,9 +88,9 @@ namespace BatteryUI {
             // First apply all absolute values
             float absSum = 0;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].columnWidth.getUnit() == Measurement::Unit::PIXEL) {
-                    widths[i] = elements[i].columnWidth.getValue();// - ImGui::GetStyle().ItemSpacing.x;
-                    absSum += elements[i].columnWidth.getValue();
+                if (elements[i].columnWidth.getUnit() == PropertyValue::Unit::PIXEL) {
+                    widths[i] = (float)elements[i].columnWidth;// - ImGui::GetStyle().ItemSpacing.x;
+                    absSum += (float)elements[i].columnWidth;
                 }
             }
 
@@ -129,8 +103,8 @@ namespace BatteryUI {
             // Now fill in the relative columns: relative to the page width 0.0 - 1.0
             float relSum = 0.f;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].columnWidth.getUnit() == Measurement::Unit::PERCENT) {
-                    float proportion = std::clamp(elements[i].columnWidth.getValue() / 100.f, 0.f, 1.f);
+                if (elements[i].columnWidth.getUnit() == PropertyValue::Unit::PERCENT) {
+                    float proportion = std::clamp((float)elements[i].columnWidth / 100.f, 0.f, 1.f);
                     widths[i] = available * proportion;// - ImGui::GetStyle().ItemSpacing.x;
                     relSum += available * proportion;
                 }
@@ -146,14 +120,14 @@ namespace BatteryUI {
             // Share the remaining spare among the proportions
             float ulSum = 0.f;
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].columnWidth.getUnit() == Measurement::Unit::UNITLESS) {
-                    ulSum += elements[i].columnWidth.getValue();
+                if (elements[i].columnWidth.getUnit() == PropertyValue::Unit::UNITLESS) {
+                    ulSum += (float)elements[i].columnWidth;
                 }
             }
             for (size_t i = 0; i < num; i++) {
-                if (elements[i].columnWidth.getUnit() == Measurement::Unit::UNITLESS) {
+                if (elements[i].columnWidth.getUnit() == PropertyValue::Unit::UNITLESS) {
                     if (ulSum != 0) {
-                        float proportion = elements[i].columnWidth.getValue() / ulSum;
+                        float proportion = (float)elements[i].columnWidth / ulSum;
                         widths[i] = remaining * proportion;// - ImGui::GetStyle().ItemSpacing.x;
                     }
                 }
