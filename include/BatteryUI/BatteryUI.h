@@ -13,8 +13,8 @@ namespace BatteryUI {
     inline BatteryUI::Theme theme = Theme_Modern();
 
     template<typename T, typename... TArgs>
-    inline std::unique_ptr<T> Setup(const BatteryUI::Callback& redrawRequest, TArgs... args) {
-        Internal::redrawRequestCallback = redrawRequest;
+    inline std::unique_ptr<T> Setup(const BatteryUI::Config& callbackConfig, TArgs... args) {
+        Internal::callbacks = callbackConfig;
 		
         LoadDefaultBatteryStyle();
 		

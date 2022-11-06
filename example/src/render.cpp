@@ -6,25 +6,33 @@ std::unique_ptr<UI> ui; // Global instance
 
 void setupUI() {
 
-    ui = BatteryUI::Setup<UI>([&] {     // The first parameter is a lambda function callback which when called
-        glfwPostEmptyEvent();                               // tell you to re-render the screen (for example when a loading bar is
-    });                                                     // visible. Can be ignored if framerate is always high. Any additional
-                                                            // parameters are forwarded to your UI class constructor. Be aware that
-                                                            // this callback may be called from any thread
+    BatteryUI::Config config;           // Here you must define some of your backend functions (directly or using lambdas)
+    config.callback_requestRedraw = [&] { glfwPostEmptyEvent(); };
+    config.callback_rebuildFontAtlas = [&] { ImGui_ImplOpenGL3_CreateFontsTexture(); };
+
+    ui = BatteryUI::Setup<UI>(config);
 
     BatteryUI::theme = BatteryUI::Theme_Modern();   // You can use a predefined theme or create your own
 }
 
 void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitches when live reloading fonts
 
-    static float fontSize = Fonts::fontSize;
+    static float scale = 1.f;
     if (ImGui::IsKeyPressed(ImGuiKey_UpArrow, false)) {
-        fontSize += 1.f;
+        scale *= 1.1f;
+        BatteryUI::SetFontScale(scale);
     }
-    if (ImGui::IsKeyPressed(ImGuiKey_DownArrow, false) && Fonts::fontSize > 2) {   // Must stay above 0
-        fontSize -= 1.f;
+    if (ImGui::IsKeyPressed(ImGuiKey_DownArrow, false)) {
+        scale /= 1.1f;
+        BatteryUI::SetFontScale(scale);
     }
-    Fonts::setFontSize(fontSize);
+
+    if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow, false)) {
+        ui->fontIndex--;
+    }
+    if (ImGui::IsKeyPressed(ImGuiKey_RightArrow, false)) {
+        ui->fontIndex++;
+    }
 }
 
 void renderUI() {

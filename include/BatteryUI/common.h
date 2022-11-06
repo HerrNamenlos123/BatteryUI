@@ -11,6 +11,7 @@
 #include <thread>
 #include <atomic>
 #include <map>
+#include <unordered_map>
 
 #include "BatteryUI/External/json.hpp"
 #include "BatteryUI/External/magic_enum.h"

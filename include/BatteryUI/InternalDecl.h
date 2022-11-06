@@ -12,10 +12,20 @@ namespace BatteryUI {
 
     class PropertyValue;
 
+    struct Config {
+        std::function<void(void)> callback_requestRedraw;       // Callback to signal it's time to resume your main loop
+                                                                //   and start calling BatteryUI again (after standby),
+                                                                //   called from any thread (e.g. from a loading bar
+                                                                //   which needs a higher framerate when active)
+
+        std::function<void(void)> callback_rebuildFontAtlas;    // e.g. ImGui_ImplOpenGL3_CreateFontsTexture() or
+                                                                //      ImGui::SFML::ImGui::SFML::UpdateFontTexture()
+    };
+
 	namespace Internal {
 
-        extern inline BatteryUI::Callback redrawRequestCallback;
-        extern inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;
+        inline Config callbacks;
+        extern inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;  // Cannot be defined yet ('extern')
 
 	}
 

@@ -20,8 +20,8 @@ namespace BatteryUI {
 		void update() {
 			while (!this->terminate) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(period));
-				if (Internal::redrawRequestCallback) {
-					Internal::redrawRequestCallback();
+				if (Internal::callbacks.callback_requestRedraw) {
+                    Internal::callbacks.callback_requestRedraw();
 				}
 			}
 		}

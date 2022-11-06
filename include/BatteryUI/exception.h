@@ -8,7 +8,7 @@
 #define GET_FUNCTION_NAME() __func__        // Evaluates to 'myFunction'
 #endif
 
-#define UI_EXCEPTION(msg, ...) MakeException(GET_FUNCTION_NAME(), msg, ##__VA_ARGS__)
+#define UI_EXCEPTION(msg, ...) BatteryUI::MakeException(GET_FUNCTION_NAME(), msg, ##__VA_ARGS__)
 
 namespace BatteryUI {
 
