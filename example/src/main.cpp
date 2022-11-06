@@ -57,7 +57,7 @@ int main() {
     }
 
     while (!glfwWindowShouldClose(window)) {
-        //glfwPollEvents();     // <- This would let it run as fast as possible
+        //glfwPollEvents();     // <- This lets it run as fast as possible
         glfwWaitEvents();       // <- This waits until an event arrives, this is an easy way to only let your
 		                        // application render when something changes. However, this is a problem
                                 // with dynamic widgets like blinking cursors as they do not create events.

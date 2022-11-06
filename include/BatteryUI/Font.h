@@ -159,42 +159,54 @@ namespace BatteryUI {
 		ImGui::GetIO().Fonts->Build();
 	}
 
-    inline static std::unordered_map<std::string, Font> fontMap;
-    inline static float fontScale = 1.f;
+    namespace Internal {
+
+        inline static std::unordered_map<std::string, Font> fontMap;
+        inline static float fontScale = 1.f;
+
+    }
 
     inline void AddFontFromFile(const char* fontIdentifier, const std::string& filepath, float size,
                                 std::optional<ImFontConfig> fontConfig = std::nullopt,
                                 const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
     {
-        fontMap[fontIdentifier] = Font(filepath, size, fontConfig, glyphRanges);
+        Internal::fontMap[fontIdentifier] = Font(filepath, size, fontConfig, glyphRanges);
     }
 
     inline void AddFontFromConfig(const char* fontIdentifier, const ImFontConfig& fontConfig)
     {
-        fontMap[fontIdentifier] = Font(fontConfig);
+        Internal::fontMap[fontIdentifier] = Font(fontConfig);
     }
 
     inline void AddFontFromMemfile(const char* fontIdentifier, const std::string& data, float fontsize,
                                   std::optional<ImFontConfig> fontConfig = std::nullopt,
                                   const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
     {
-        fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_RAW, data, fontsize, fontConfig, glyphRanges);
+        Internal::fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_RAW, data, fontsize, fontConfig, glyphRanges);
     }
 
     inline void AddFontFromEmbeddedArray(const char* fontIdentifier, const std::string& data, float fontsize,
                                    std::optional<ImFontConfig> fontConfig = std::nullopt,
                                    const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
     {
-        fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_COMPRESSED, data, fontsize, fontConfig, glyphRanges);
+        Internal::fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_COMPRESSED, data, fontsize, fontConfig, glyphRanges);
     }
 
     inline Font& GetFont(const char* str) {
         try {
-            return fontMap.at(str);
+            return Internal::fontMap.at(str);
         }
         catch (...) {
             throw UI_EXCEPTION("Cannot access font '%s': No such element, was the font loaded?", str);
         }
+    }
+
+    inline std::vector<std::pair<std::string, Font>> GetFonts() {
+        std::vector<std::pair<std::string, Font>> fonts;
+        for (auto& f : Internal::fontMap) {
+            fonts.emplace_back(f);
+        }
+        return fonts;
     }
 
     inline void PushFont(const char* str) {
@@ -206,17 +218,20 @@ namespace BatteryUI {
     }
 
     inline void SetFontScale(float scale) {
-        if (scale == fontScale) return;
-        fontScale = scale;
+        if (scale == Internal::fontScale) return;
+        Internal::fontScale = scale;
 
         ClearFontAtlas();
-        for (auto &[key, font]: fontMap) {
-            font.SetScale(fontScale);
+        for (auto &[key, font]: Internal::fontMap) {
+            font.SetScale(Internal::fontScale);
         }
         BuildFontAtlas();
 
         if (Internal::callbacks.callback_rebuildFontAtlas) {
             Internal::callbacks.callback_rebuildFontAtlas();
+        }
+        if (Internal::callbacks.callback_requestRedraw) {
+            Internal::callbacks.callback_requestRedraw();
         }
     }
 

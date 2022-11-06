@@ -28,10 +28,10 @@ void updateUI() {   // This is called before ImGui::NewFrame() to prevent glitch
     }
 
     if (ImGui::IsKeyPressed(ImGuiKey_LeftArrow, false)) {
-        ui->fontIndex--;
+        //ui->fontIndex--;
     }
     if (ImGui::IsKeyPressed(ImGuiKey_RightArrow, false)) {
-        ui->fontIndex++;
+        //ui->fontIndex++;
     }
 }
 
