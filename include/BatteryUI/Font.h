@@ -27,9 +27,9 @@ namespace BatteryUI {
         }
 
         Font(const std::string& filepath,
-                float size,
-                std::optional<ImFontConfig> fontConfig = std::nullopt,
-                const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
+             float size,
+             std::optional<ImFontConfig> fontConfig = std::nullopt,
+             const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
         {
             type = FontType::FILE;
             fontdata_filepath = filepath;
@@ -46,12 +46,12 @@ namespace BatteryUI {
         }
 
         Font(FontType typeOfData, const std::string& data,
-                 float size,
-                 std::optional<ImFontConfig> fontConfig = std::nullopt,
-                 const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
-             {
+             float size,
+             std::optional<ImFontConfig> fontConfig = std::nullopt,
+             const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
+        {
             if (typeOfData != FontType::MEMORY_RAW &&
-                    typeOfData != FontType::MEMORY_COMPRESSED) {
+                typeOfData != FontType::MEMORY_COMPRESSED) {
                 throw UI_EXCEPTION("Failed to load font: The BatteryUI::Font Memory-Constructor was called with a non-memory FontType");
             }
             type = typeOfData;
@@ -91,8 +91,8 @@ namespace BatteryUI {
                         throw UI_EXCEPTION("Failed to load font from '%s': No such file or directory", fontdata_filepath.c_str());
 
                     font = fonts->AddFontFromFileTTF(fontdata_filepath.c_str(),
-                                                    fontdata_size * scale,
-                                                    fontdata_config.has_value() ? (&fontdata_config.value()) : nullptr,
+                                                     fontdata_size * scale,
+                                                     fontdata_config.has_value() ? (&fontdata_config.value()) : nullptr,
                                                      fontdata_glyphs.size() > 1 ? fontdata_glyphs.data() : nullptr);
                     if (!font) throw UI_EXCEPTION("File at '%s' could not be loaded as a font", fontdata_filepath.c_str());
                     break;
@@ -107,20 +107,20 @@ namespace BatteryUI {
                     break;
 
                 case FontType::MEMORY_RAW: {                             // This buffer is transferred to ImGui and then deleted by ImGui
-                                                                         // cfg.FontDataOwnedByAtlas is not used to avoid data lifetime issues:
+                    // cfg.FontDataOwnedByAtlas is not used to avoid data lifetime issues:
                     void* temp = new uint8_t[fontdata_memdata.size()];   //  just let ImGui do its thing
                     memcpy(temp, fontdata_memdata.data(), fontdata_memdata.size());
                     font = fonts->AddFontFromMemoryTTF(temp, (int)fontdata_memdata.size(), fontdata_size * scale,
                                                        fontdata_config.has_value() ? (&fontdata_config.value()) : nullptr,
                                                        fontdata_glyphs.size() > 1 ? fontdata_glyphs.data() : nullptr);
                     if (!font) throw UI_EXCEPTION("File at '%s' could not be loaded as a font", fontdata_filepath.c_str());
-                    } break;
+                } break;
 
                 case FontType::MEMORY_COMPRESSED:
                     font = fonts->AddFontFromMemoryCompressedTTF(fontdata_memdata.data(), (int)fontdata_memdata.size(),
                                                                  fontdata_size * scale,
-                                                       fontdata_config.has_value() ? (&fontdata_config.value()) : nullptr,
-                                                       fontdata_glyphs.size() > 1 ? fontdata_glyphs.data() : nullptr);
+                                                                 fontdata_config.has_value() ? (&fontdata_config.value()) : nullptr,
+                                                                 fontdata_glyphs.size() > 1 ? fontdata_glyphs.data() : nullptr);
                     if (!font) throw UI_EXCEPTION("File at '%s' could not be loaded as a font", fontdata_filepath.c_str());
                     break;
 
@@ -152,12 +152,12 @@ namespace BatteryUI {
     };
 
     inline void ClearFontAtlas() {
-		ImGui::GetIO().Fonts->Clear();
+        ImGui::GetIO().Fonts->Clear();
     }
 
-	inline void BuildFontAtlas() {
-		ImGui::GetIO().Fonts->Build();
-	}
+    inline void BuildFontAtlas() {
+        ImGui::GetIO().Fonts->Build();
+    }
 
     namespace Internal {
 
@@ -179,17 +179,20 @@ namespace BatteryUI {
     }
 
     inline void AddFontFromMemfile(const char* fontIdentifier, const std::string& data, float fontsize,
-                                  std::optional<ImFontConfig> fontConfig = std::nullopt,
-                                  const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
+                                   std::optional<ImFontConfig> fontConfig = std::nullopt,
+                                   const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
     {
         Internal::fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_RAW, data, fontsize, fontConfig, glyphRanges);
     }
 
-    inline void AddFontFromEmbeddedArray(const char* fontIdentifier, const std::string& data, float fontsize,
-                                   std::optional<ImFontConfig> fontConfig = std::nullopt,
-                                   const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
+    inline void AddFontFromEmbeddedArray(const char* fontIdentifier, const unsigned int* data, const unsigned int datasize,
+                                         float fontsize, std::optional<ImFontConfig> fontConfig = std::nullopt,
+                                         const std::vector<std::pair<ImWchar, ImWchar>>& glyphRanges = {})
     {
-        Internal::fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_COMPRESSED, data, fontsize, fontConfig, glyphRanges);
+        std::string datastring;
+        datastring.resize(datasize);
+        memcpy(datastring.data(), data, datasize);
+        Internal::fontMap[fontIdentifier] = Font(Font::FontType::MEMORY_COMPRESSED, datastring, fontsize, fontConfig, glyphRanges);
     }
 
     inline Font& GetFont(const char* str) {
