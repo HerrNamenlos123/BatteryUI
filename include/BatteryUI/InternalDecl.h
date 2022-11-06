@@ -22,6 +22,7 @@ namespace BatteryUI {
     inline void RequestRedraw();
     inline void PushProperty(const std::string& property, const PropertyValue& value);
     inline void PopProperty();
+
     inline std::optional<PropertyValue> RetrieveProperty(const std::string& property);
 
     template<typename T>
