@@ -42,5 +42,5 @@ cmake-build-*
 # Miscellaneous
 example/resources/stylesheet.json
 bin/
-build/
+build*/
 example/modules/

@@ -152,7 +152,7 @@ namespace BatteryUI {
 #define BATTERYUI_STYLESHEET_HOTRELOAD(...) \
 	std::unique_ptr<BatteryUI::HotreloadHandler> __hotreload; \
 	void setupHotreload() override { \
-		__hotreload = std::make_unique<BatteryUI::HotreloadHandler>(this, ##__VA_ARGS__); \
+		__hotreload = std::make_unique<BatteryUI::HotreloadHandler>(this VA_ARGS(__VA_ARGS__)); \
 	} \
 	void terminateHotreload() override { \
 		__hotreload.reset(); \

@@ -27,6 +27,12 @@ namespace BatteryUI {
 
 #define BATTERYUI_SERIALIZE NLOHMANN_DEFINE_TYPE_INTRUSIVE
 
+#ifdef BATTERY_COMPILER_GCC
+#define VA_ARGS(...) __VA_OPT__(,) __VA_ARGS__
+#else
+#define VA_ARGS(...) , ##__VA_ARGS__
+#endif
+
 // JSON serialization for ImVec2
 inline void to_json(nlohmann::json& j, const ImVec2& v) {
     j = nlohmann::json::array({ v.x, v.y });
