@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utility>
-
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/RedrawNotifier.h"
