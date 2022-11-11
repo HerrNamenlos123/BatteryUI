@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "BatteryUI/common.h"
 #include "BatteryUI/Style.h"
 #include "BatteryUI/RedrawNotifier.h"
@@ -44,7 +46,7 @@ namespace BatteryUI {
 		virtual void applyJsonRootUI(const nlohmann::json& json) = 0;
 		virtual void getJsonRootUI(nlohmann::json& json) = 0;
 
-		explicit RootUI(const std::string& styleSheet) : styleSheet(styleSheet) {
+		explicit RootUI(std::string  styleSheet) : styleSheet(std::move(styleSheet)) {
 			window.name = "Style Manager";
 			setupHotreload();
 		}
@@ -115,7 +117,7 @@ namespace BatteryUI {
 
 	class HotreloadHandler {
 	public:
-		HotreloadHandler(RootUI* _ui, int64_t _period_ms = HOTRELOAD_UPDATE_INTERVAL_MS) {
+		explicit HotreloadHandler(RootUI* _ui, int64_t _period_ms = HOTRELOAD_UPDATE_INTERVAL_MS) {
 			this->ui = _ui;
 			this->period_ms = _period_ms;
 			this->fileWatcher = std::make_unique<FileWatcher>(ui->styleSheet);
@@ -157,5 +159,13 @@ namespace BatteryUI {
 	void terminateHotreload() override { \
 		__hotreload.reset(); \
 	}
+
+#define BATTERYUI_ROOT_UI() \
+    void applyJsonRootUI(const nlohmann::json& json) override { \
+        from_json(json, *this); \
+    } \
+    void getJsonRootUI(nlohmann::json& json) override { \
+        to_json(json, *this); \
+    }
 	
 }
