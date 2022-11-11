@@ -7,17 +7,6 @@
 #include "BatteryUI/Widgets/Dropdown.h"
 
 namespace BatteryUI {
-	namespace Internal {
-
-        inline BatteryUI::Callback redrawRequestCallback;
-        inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;
-
-	}
-
-    inline void RequestRedraw() {
-        if (Internal::redrawRequestCallback)
-            Internal::redrawRequestCallback();
-    }
 
     inline void PushProperty(const std::string& property, const PropertyValue& value) {
         Internal::propertyStack.emplace_back(property, value);
@@ -99,15 +88,5 @@ namespace BatteryUI {
         }
 
         Internal::propertyStack.pop_back();
-    }
-
-    inline std::optional<PropertyValue> RetrieveProperty(const std::string& property) {
-        for (auto iter = Internal::propertyStack.rbegin(); iter != Internal::propertyStack.rend(); ++iter) {
-            auto& [_property, _value] = *iter;
-            if (_property == property) {
-                return _value;
-            }
-        }
-        return std::nullopt;
     }
 }

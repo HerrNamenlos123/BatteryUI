@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BatteryUI/common.h"
+#include "BatteryUI/Property.h"
 
 namespace BatteryUI {
 
@@ -9,8 +10,6 @@ namespace BatteryUI {
 	struct ContainerStyle;
 	struct HorizontalGridStyle;
 	struct VerticalGridStyle;
-
-    class PropertyValue;
 
     struct Config {
         std::function<void(void)> callback_requestRedraw;       // Callback to signal it's time to resume your main loop
@@ -25,19 +24,26 @@ namespace BatteryUI {
 	namespace Internal {
 
         inline Config callbacks;
-        extern inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;  // Cannot be defined yet ('extern')
+        inline std::vector<std::pair<std::string, PropertyValue>> propertyStack;  // Cannot be defined yet ('extern')
 
 	}
 
-    inline void RequestRedraw();
     inline void PushProperty(const std::string& property, const PropertyValue& value);
     inline void PopProperty();
 
-    inline std::optional<PropertyValue> RetrieveProperty(const std::string& property);
+    inline std::optional<PropertyValue> RetrieveProperty(const std::string& property) {
+        for (auto iter = Internal::propertyStack.rbegin(); iter != Internal::propertyStack.rend(); ++iter) {
+            auto& [_property, _value] = *iter;
+            if (_property == property) {
+                return _value;
+            }
+        }
+        return std::nullopt;
+    }
 
     template<typename T>
     T RetrieveProperty(const std::string& prop, T defaultValue) {
-        auto& value = RetrieveProperty(prop);
+        auto value = RetrieveProperty(prop);
         if (value.has_value()) {
             return (T)value.value();
         }

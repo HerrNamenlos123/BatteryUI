@@ -125,7 +125,7 @@ namespace BatteryUI {
                     wait(std::chrono::milliseconds(period_ms));
 					if (fileWatcher->update()) {
 						ui->loadStyleSheet();
-						BatteryUI::RequestRedraw();
+						BatteryUI::Internal::callbacks.callback_requestRedraw();
 					}
 				}
 				});
