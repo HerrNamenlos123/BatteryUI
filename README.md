@@ -1,11 +1,6 @@
 # BatteryUI
 A C++17 header-only library to make your ImGui interface look good 
 
-```
-sudo apt install libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev
-sudo apt install libgl1-mesa-dev
-```
-
 ## Requirements:
 
  - Working C++ compiler and IDE with support for at least C++17
@@ -60,3 +55,8 @@ Due to the way Visual Studio and other IDEs work, your working directory is mean
 
 >Coming:  
 >https://github.com/JlnWntr/Lua-Adapter
+
+>```
+>sudo apt install libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev
+>sudo apt install libgl1-mesa-dev
+>```
