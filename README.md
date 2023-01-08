@@ -12,15 +12,32 @@ sudo apt install libgl1-mesa-dev
  - git and CMake installed
 
 ## Build example
+
+### Building directly in terminal (any IDE/compiler)
 ```bash
 cd example
 mkdir build
 cd build
-cmake ..
-cmake --build .
+
+cmake ..               # Configure the build system
+cmake --build .        # Compile the executable
+../bin/debug/example   # Run the resulting executable (or 'release')
 ```
 
-The resulting executable is placed in `../bin/<debug:release>/`
+### Building using Visual Studio (Windows)
+```bash
+cd example
+mkdir build
+cd build
+
+cmake ..               # Configure the build system
+start example.sln      # Open the solution in Visual Studio
+```
+
+Alternatively open `build/example.sln` manually in Visual Studio. 
+
+In Visual Studio, right-click on the target `example` and click `Set as Startup Project` (German `Als Startprojekt festlegen`).
+Now you can simply build and run the executable in Visual Studio by pressing `F5`.
 
 Malte Skarupke
 https://github.com/skarupke/std_function  std_function.h
