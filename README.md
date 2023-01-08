@@ -16,7 +16,7 @@ cd build
 
 cmake ..               # Configure the build system
 cmake --build .        # Compile the executable
-../bin/debug/example   # Run the resulting executable (or 'release')
+../bin/debug/example   # Run the resulting executable (or 'release' instead of `debug`)
 ```
 
 ### Building using Visual Studio (Windows)
