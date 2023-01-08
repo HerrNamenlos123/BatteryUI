@@ -32,7 +32,7 @@ start example.sln      # Open the solution in Visual Studio
 Alternatively open `build/example.sln` manually in Visual Studio. 
 
 In Visual Studio, right-click on the target `example` and click `Set as Startup Project` (German `Als Startprojekt festlegen`).
-Now you can simply build and run the executable in Visual Studio by pressing `F5`.
+Now you can simply build and run the executable in Visual Studio by pressing `F5` (`Debug/Start debugging`).
 
 ## Troubleshooting
 
