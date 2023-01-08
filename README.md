@@ -42,7 +42,9 @@ BatteryUI::Exception was thrown: [BatteryUI::Font::loadFont]: Failed to load fon
 ```
 then you are running the executable from the wrong working directory.
 
-Due to the way Visual Studio and other IDEs work, your working directory is meant to be the `example/build/` directory you created when building. You should run the executable from this directory with the command `../bin/debug/example` (or 'release' instead of `debug`). Visual Studio does this under the hood, its working directory is the directory in which the `example.sln` file is placed.
+Due to the way Visual Studio and other IDEs work, your working directory is meant to be the `example/build/` directory you created when building. You should run the executable from this directory with the command `../bin/debug/example` (or 'release' instead of `debug`). 
+
+Visual Studio does this under the hood, its working directory is by default the directory in which the `example.sln` file is placed.
 
 # TODO
 
